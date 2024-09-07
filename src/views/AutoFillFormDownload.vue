@@ -11,8 +11,18 @@
 import {PDFDocument, rgb} from 'pdf-lib';
 import fontkit from '@pdf-lib/fontkit';
 const BaseURL = 'https://taipei-microservices-initiative-hayu.onrender.com/api/';
-//const BaseURL = 'http://localhost:8081/api/';
+// const BaseURL = 'http://localhost:8081/api/';
 export default {
+    data() {
+        return {
+            formname: this.$route.query.formname,
+            userid: this.$route.query.userid,
+            postCollection: {
+                extra1: 'extraaaaaa one one one',
+                extra2: 'extra two two two',
+            }
+        };
+    },
     methods: {
         async modifyPdf(userid, formname) {
             try {
@@ -62,7 +72,13 @@ export default {
 
                     if (detail.datatype == "text") {
                         console.log("in text area");
-                        pages[detail.page].drawText(userData[detail.data], {
+                        let fill;
+                        if(!userData[detail.data]){
+                            fill = this.postCollection[detail.data];
+                        } else {
+                            fill = userData[detail.data];
+                        }
+                        pages[detail.page].drawText(fill, {
                             x: detail.x,
                             y: detail.y,
                             size: detail.size,
