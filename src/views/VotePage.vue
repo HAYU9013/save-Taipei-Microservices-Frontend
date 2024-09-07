@@ -2,34 +2,45 @@
   <div class="vote-page">
     <h2 class="page-title">活動投票</h2>
     <div v-if="activities.length === 0" class="empty-message">目前沒有可供投票的活動。</div>
-    <div v-for="activity in activities" :key="activity.id" class="activity-container">
+    <div v-for="activity in activities" :key="activity.id" class="activity-card"
+      :class="{ 'voted': votedActivities[activity.id] }">
       <h3 class="activity-title">{{ activity.name }}</h3>
-      <VoteOptions
-        :options="activity.options"
-        :showResults="true"
-        @vote="handleVote"
-      />
+      <!-- 檢查是否已投票 -->
+      <div v-if="!votedActivities[activity.id]">
+        <VoteOptions :options="activity.options" :showResults="true"
+          @vote="(optionId) => handleVote(activity.id, optionId)" />
+      </div>
+      <div v-else class="voted-message">
+        你已經對此活動投過票了！
+        <!-- 禁止再次投票，disabled屬性設為true -->
+        <VoteOptions :options="activity.options" :showResults="true" :disabled="true" />
+      </div>
+      <!-- 顯示投票結果 -->
+      <div v-if="activity.showResults || votedActivities[activity.id]" class="result-chart">
+        <canvas :id="'chart-' + activity.id"></canvas>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import VoteOptions from '@/components/VoteOptions.vue';
+import { Chart } from 'chart.js';
 import axios from 'axios';
 
 export default {
   data() {
     return {
-      activities: [], // 保存從後端獲取的活動及其選項
+      activities: [],
+      votedActivities: {},  // 只在記憶體中儲存投票狀態
     };
   },
   components: {
     VoteOptions
   },
   methods: {
-    // 從後端獲取活動及其選項
     fetchActivities() {
-      axios.get('http://localhost:8081/api/vote/activities')  // 後端 API 路徑
+      axios.get('http://localhost:8081/api/vote/activities')
         .then(response => {
           this.activities = response.data;
         })
@@ -38,19 +49,46 @@ export default {
         });
     },
 
-    // 提交投票
-    handleVote(optionId) {
-      axios.post('http://localhost:8081/api/vote/submit', { option_id: optionId })  // 提交投票後重新獲取活動數據
+    handleVote(activityId, optionId) {
+      axios.post('http://localhost:8081/api/vote/submit', { option_id: optionId })
         .then(() => {
-          this.fetchActivities();
+          // 投票成功後，將活動 ID 暫時保存在記憶體中
+          this.votedActivities[activityId] = true;
+          this.fetchActivities();  // 重新獲取活動數據，刷新結果
         })
         .catch(error => {
           console.error("投票失敗", error);
         });
+    },
+
+    renderChart(activity) {
+      const ctx = document.getElementById(`chart-${activity.id}`);
+      new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: activity.options.map(option => option.name),
+          datasets: [{
+            data: activity.options.map(option => option.voteCount),
+            backgroundColor: ['#4a90e2', '#50e3c2', '#f5a623', '#d0021b'],
+          }]
+        },
+        options: {
+          responsive: true,
+        }
+      });
+    }
+  },
+  watch: {
+    activities(newActivities) {
+      newActivities.forEach(activity => {
+        if (activity.showResults || this.votedActivities[activity.id]) {
+          this.$nextTick(() => this.renderChart(activity));
+        }
+      });
     }
   },
   created() {
-    this.fetchActivities(); // 頁面加載時獲取活動及其選項
+    this.fetchActivities();
   }
 };
 </script>
@@ -59,39 +97,70 @@ export default {
 .vote-page {
   max-width: 800px;
   margin: 0 auto;
-  padding: 30px; /* 增加內邊距 */
+  padding: 40px;
   background-color: #f8f9fa;
-  border-radius: 20px; /* 圓角加大 */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); /* 加強陰影 */
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .page-title {
   text-align: center;
+  font-size: 32px;
+  font-weight: 600;
   color: #343a40;
-  font-size: 32px; /* 加大字體 */
-  font-weight: bold; /* 字體加粗 */
-  margin-bottom: 40px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* 增加字體陰影 */
+  margin-bottom: 30px;
 }
 
 .empty-message {
   text-align: center;
   color: #6c757d;
-  font-size: 20px;
-  padding: 30px;
+  font-size: 18px;
+  padding: 20px;
 }
 
-.activity-container {
+.activity-card {
   margin-bottom: 40px;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.activity-card.voted {
+  background-color: #e9ecef;
+  border: 1px solid #ced4da;
 }
 
 .activity-title {
-  font-size: 24px; /* 加大字體 */
-  font-weight: bold;
-  color: #007bff;
-  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 500;
+  color: #495057;
+  margin-bottom: 15px;
   text-align: center;
-  border-bottom: 2px solid #007bff; /* 增加底線 */
-  padding-bottom: 10px; /* 增加底部距離 */
+  padding-bottom: 5px;
+  border-bottom: 2px solid #6c757d;
+}
+
+.result-chart {
+  margin-top: 20px;
+}
+
+.voted-message {
+  text-align: center;
+  font-size: 16px;
+  color: #6c757d;
+  background-color: #f1f3f5;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.vote-page .activity-card:hover {
+  transform: translateY(-5px);
+}
+
+.vote-page .activity-card.voted:hover {
+  transform: none;
 }
 </style>
