@@ -128,6 +128,19 @@ export default {
         async downloadPdf() {
             const userid = this.$route.query.userid;
             const formname = this.$route.query.formname;
+            if (this.$route.query.extra1) {
+                this.postCollection.extra1 = this.$route.query.extra1;
+            }
+            else {
+
+                this.postCollection.extra1 = "";
+            }
+            if (this.$route.query.extra2) {
+                this.postCollection.extra2 = this.$route.query.extra2;
+            }
+            else {
+                this.postCollection.extra2 = "extra two two two";
+            }
             console.log(userid);
             console.log(formname);
 
