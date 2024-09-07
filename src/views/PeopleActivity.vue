@@ -67,10 +67,31 @@
         <div v-if="activeTab === 2" class="ai-tour-guide">
             <h1 class="title">旅遊行程安排</h1>
             <form @submit.prevent="submitItinerary" class="form-container">
-                <input type="text" v-model="form.location" placeholder="輸入地點" required />
+                <!-- 地區選單 -->
+                <label for="location">選擇地區</label>
+                <select v-model="form.location" required>
+                    <option disabled value="">請選擇地區</option>
+                    <option value="信義區">信義區</option>
+                    <option value="大安區">大安區</option>
+                    <option value="中正區">中正區</option>
+                    <option value="大同區">大同區</option>
+                    <option value="中山區">中山區</option>
+                    <option value="萬華區">萬華區</option>
+                    <option value="松山區">松山區</option>
+                    <option value="士林區">士林區</option>
+                    <option value="北投區">北投區</option>
+                    <option value="內湖區">內湖區</option>
+                    <option value="南港區">南港區</option>
+                    <option value="文山區">文山區</option>
+                </select>
+
+                <!-- 行程描述 -->
                 <input type="text" v-model="form.description" placeholder="輸入行程描述" required />
+
+                <!-- 送出按鈕 -->
                 <button type="submit" class="submit-btn">送出行程</button>
             </form>
+
 
             <div v-if="recommendedLocations.length > 0" class="map-container">
                 <div v-for="(location, index) in recommendedLocations" :key="index" class="location-item">
@@ -464,6 +485,7 @@ input:focus {
     color: #333;
     line-height: 1.6em;
 }
+
 .switch-btn {
     background-color: #00bcd4;
     color: white;
@@ -473,5 +495,71 @@ input:focus {
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    margin: 1em;
+    padding: 1em;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* 調整選單樣式 */
+select {
+    padding: 0.75em;
+    border: 1px solid #ccc;
+    border-radius: 0.5em;
+    font-size: 1.2em;
+    margin-bottom: 1em;
+    transition: all 0.3s ease-in-out;
+    background-color: white;
+    color: #333;
+    appearance: none;
+}
+
+select:focus {
+    border-color: #00bcd4;
+    box-shadow: 0 4px 8px rgba(0, 188, 212, 0.2);
+    outline: none;
+}
+
+select option {
+    font-size: 1.1em;
+}
+
+/* 其他輸入框樣式 */
+input {
+    padding: 0.75em;
+    border: 1px solid #ccc;
+    border-radius: 0.5em;
+    font-size: 1.2em;
+    margin-bottom: 1em;
+    transition: all 0.3s ease-in-out;
+}
+
+input:focus {
+    border-color: #00bcd4;
+    box-shadow: 0 4px 8px rgba(0, 188, 212, 0.2);
+    outline: none;
+}
+
+/* 調整按鈕樣式 */
+.submit-btn {
+    padding: 0.75em 1.5em;
+    border: none;
+    border-radius: 0.5em;
+    background-color: #00bcd4;
+    color: #fff;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: #0097a7;
+    box-shadow: 0 4px 12px rgba(0, 188, 212, 0.3);
 }
 </style>
