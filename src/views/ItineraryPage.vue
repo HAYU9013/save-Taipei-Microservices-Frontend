@@ -5,7 +5,7 @@
       <form @submit.prevent="submitItinerary">
         <div class="input-group">
           <label for="location" class="input-label">行程地點:</label>
-          <input id="location" v-model="form.location" placeholder="輸入地點" required class="input-field"/>
+          <input id="location" v-model="form.location" placeholder="輸入地點" required class="input-field" />
         </div>
 
         <div class="input-group">
@@ -19,18 +19,9 @@
 
     <!-- 顯示推薦的 Google Maps -->
     <div v-if="recommendedLocation" class="map-container">
-      <iframe
-        width="100%"
-        height="300"
-        frameborder="0"
-        scrolling="no"
-        marginheight="0"
-        marginwidth="0"
+      <iframe width="100%" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
         :src="'https://maps.google.com/maps?width=100%25&amp;height=300&amp;hl=zh-TW&amp;q=' + encodeURIComponent(recommendedLocation) + '&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed&disableDefaultUI=true&zoomControl=false&mapTypeControl=false&scaleControl=false&streetViewControl=false'"
-        allowfullscreen
-        aria-hidden="false"
-        tabindex="0"
-      ></iframe>
+        allowfullscreen aria-hidden="false" tabindex="0"></iframe>
     </div>
 
     <div v-if="responseMessage" class="response-container">
@@ -85,11 +76,11 @@ export default {
 <style scoped>
 .container {
   max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
+  margin: 40px auto;
+  padding: 30px;
   background-color: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
 .title {
@@ -114,17 +105,20 @@ export default {
   margin-bottom: 8px;
 }
 
-.input-field, .textarea-field {
+.input-field,
+.textarea-field {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   border-radius: 6px;
   border: 1px solid #bdc3c7;
   font-size: 1rem;
   transition: border-color 0.3s ease;
 }
 
-.input-field:focus, .textarea-field:focus {
+.input-field:focus,
+.textarea-field:focus {
   border-color: #2980b9;
+  outline: none;
 }
 
 .textarea-field {
@@ -133,7 +127,6 @@ export default {
 }
 
 .submit-button {
-  display: inline-block;
   width: 100%;
   padding: 12px;
   background-color: #3498db;
@@ -167,5 +160,27 @@ export default {
 .response-container h2 {
   margin-top: 0;
   color: #2c3e50;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .container {
+    padding: 20px;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .input-field,
+  .textarea-field {
+    padding: 10px;
+    font-size: 0.95rem;
+  }
+
+  .submit-button {
+    padding: 10px;
+    font-size: 1rem;
+  }
 }
 </style>

@@ -139,6 +139,8 @@ h1 {
     font-size: 2rem;
     color: #333;
     margin-bottom: 30px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
 }
 
 .form-group {
@@ -150,6 +152,7 @@ label {
     margin-bottom: 8px;
     font-weight: bold;
     color: #333;
+    font-size: 1rem;
 }
 
 input[type="text"],
@@ -157,14 +160,14 @@ input[type="datetime-local"],
 textarea,
 input[type="file"] {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 1rem;
     color: #333;
-    box-sizing: border-box;
     background: #fafafa;
     transition: border-color 0.3s ease;
+    box-sizing: border-box;
 }
 
 input[type="text"]:focus,
@@ -173,6 +176,7 @@ textarea:focus,
 input[type="file"]:focus {
     border-color: #0056b3;
     outline: none;
+    background: #fff;
 }
 
 textarea {
@@ -199,6 +203,7 @@ textarea {
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.3s ease;
+    text-align: center;
 }
 
 .submit-btn:hover {
@@ -209,5 +214,28 @@ textarea {
 .submit-btn:active {
     background-color: #003366;
     transform: translateY(0);
+}
+
+/* 手機響應樣式 */
+@media (max-width: 768px) {
+    .home {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.75rem;
+    }
+
+    .submit-btn {
+        font-size: 1rem;
+        padding: 12px;
+    }
+
+    input[type="text"],
+    input[type="datetime-local"],
+    textarea {
+        padding: 10px;
+        font-size: 0.95rem;
+    }
 }
 </style>
