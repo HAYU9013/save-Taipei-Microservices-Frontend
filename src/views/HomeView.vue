@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import { useFormStore } from '@/stores/form';
@@ -152,43 +152,25 @@ const activeRecord = computed(() =>
           </section>
           <p class="text-grey-500 mt-4 mb-2 px-4">請選擇要申請的項目</p>
           <ul v-show="!isSearch || (isSearch && searchResult?.length)">
-            <li
-              v-show="!searchResult?.length || searchResultTypeSet.has(item.name)"
-              v-for="item in serviceList.data"
-              :key="item.name"
-              class="px-4 py-2"
-              :class="{
+            <li v-show="!searchResult?.length || searchResultTypeSet.has(item.name)" v-for="item in serviceList.data"
+              :key="item.name" class="px-4 py-2" :class="{
                 'bg-grey-50': expandListSet.has(item.name)
-              }"
-            >
-              <button
-                class="w-full flex justify-between items-center mb-5"
-                @click="onExpandClick(item.name)"
-              >
+              }">
+              <button class="w-full flex justify-between items-center mb-5" @click="onExpandClick(item.name)">
                 <div class="flex items-end">
                   <img v-if="item.icon" :src="item.icon" class="w-5 h-5 object-cover mr-1" />
                   <span>{{ item.name }}</span>
                 </div>
-                <img
-                  src="@/assets/images/down-icon.svg"
-                  class="transition-transform"
-                  :class="{
-                    'rotate-180': expandListSet.has(item.name)
-                  }"
-                />
+                <img src="@/assets/images/down-icon.svg" class="transition-transform" :class="{
+                  'rotate-180': expandListSet.has(item.name)
+                }" />
               </button>
-              <div
-                class="grid grid-rows-[0fr] transition-all"
-                :class="{
-                  'grid-rows-[1fr]': expandListSet.has(item.name)
-                }"
-              >
+              <div class="grid grid-rows-[0fr] transition-all" :class="{
+                'grid-rows-[1fr]': expandListSet.has(item.name)
+              }">
                 <ul class="overflow-hidden">
-                  <li
-                    v-show="!searchResult?.length || searchResultAgencyTypeSet.has(agency.name)"
-                    v-for="agency in item.agency"
-                    :key="agency.name"
-                  >
+                  <li v-show="!searchResult?.length || searchResultAgencyTypeSet.has(agency.name)"
+                    v-for="agency in item.agency" :key="agency.name">
                     <div class="flex items-center mb-2">
                       <div class="w-2 h-2 rounded-full bg-primary-500 mr-3" />
                       <span class="text-primary-500 font-extrabold">
@@ -198,16 +180,10 @@ const activeRecord = computed(() =>
                     <div class="flex pl-[3px]">
                       <div class="w-0.5 bg-primary-500 mr-4 self-stretch"></div>
                       <ul>
-                        <li
-                          v-show="
-                            !searchResult?.length ||
-                            searchResultTitle?.filter((title) => title.includes(option.title))
-                              .length
-                          "
-                          v-for="option in agency.options"
-                          :key="option.id"
-                          class="mb-3"
-                        >
+                        <li v-show="!searchResult?.length ||
+                          searchResultTitle?.filter((title) => title.includes(option.title))
+                            .length
+                          " v-for="option in agency.options" :key="option.id" class="mb-3">
                           <RouterLink :to="{ name: 'form', params: { id: option.id } }">
                             <p class="option-title">{{ option.title }}</p>
                             <p v-if="option.subtitle" class="text-sm text-grey-400">
@@ -230,18 +206,12 @@ const activeRecord = computed(() =>
       <template #tab1>
         <div class="p-4">
           <section class="grid grid-cols-2">
-            <button
-              class="situation-button"
-              :class="{ 'situation-button--active': activeSituation === 'apply' }"
-              @click="activeSituation = 'apply'"
-            >
+            <button class="situation-button" :class="{ 'situation-button--active': activeSituation === 'apply' }"
+              @click="activeSituation = 'apply'">
               申辦中({{ applyRecord.length }})
             </button>
-            <button
-              class="situation-button"
-              :class="{ 'situation-button--active': activeSituation === 'done' }"
-              @click="activeSituation = 'done'"
-            >
+            <button class="situation-button" :class="{ 'situation-button--active': activeSituation === 'done' }"
+              @click="activeSituation = 'done'">
               已結案({{ finishRecord.length }})
             </button>
           </section>
@@ -300,5 +270,118 @@ const activeRecord = computed(() =>
   &--active {
     @apply bg-primary-500 text-white;
   }
+}
+</style> -->
+
+
+
+<template>
+  <div class="app">
+    <h1>測試與 Flutter WebView 的雙向通訊</h1>
+
+    <!-- 發送訊息到 Flutter -->
+    <div>
+      <button @click="sendMessageToFlutter">發送訊息到 Flutter</button>
+    </div>
+
+    <!-- 顯示來自 Flutter 的回應 -->
+    <div v-if="flutterResponse">
+      <p>來自 Flutter 的回應：</p>
+      <pre>{{ flutterResponse }}</pre>
+    </div>
+
+    <!-- 顯示所有的 debug 日誌 -->
+    <div>
+      <h2>Debug 日誌：</h2>
+      <ul>
+        <li v-for="(log, index) in logs" :key="index">{{ log }}</li>
+      </ul>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useConnectionMessage } from '@/composables/useConnectionMessage';
+import { useHandleConnectionData } from '@/composables/useHandleConnectionData';
+
+// 資料狀態管理
+const flutterResponse = ref(''); // 儲存來自 Flutter 的回應
+const logs = ref<string[]>([]); // 使用標準泛型語法來修正
+
+// 添加日誌方法
+const addLog = (log: string) => {
+  logs.value.push(log);
+};
+
+// 發送訊息到 Flutter 的方法
+const sendMessageToFlutter = () => {
+  const messageData = { name: 'userinfo', data: null };
+  addLog(`即將發送訊息到 Flutter: ${JSON.stringify(messageData)}`);
+  useConnectionMessage('userinfo', null);
+  addLog('訊息已發送至 Flutter');
+};
+
+// 處理來自 Flutter 的回應
+const handleFlutterMessage = (event: { data: string }) => {
+  try {
+    addLog(`收到來自 Flutter 的消息: ${event.data}`);
+    const responseData = JSON.parse(event.data);
+    flutterResponse.value = JSON.stringify(responseData, null, 2);
+    addLog(`解析後的消息: ${flutterResponse.value}`);
+  } catch (e) {
+    addLog(`解析來自 Flutter 的消息失敗: ${e}`);
+  }
+};
+
+// 監聽 Flutter 傳回的資料
+useHandleConnectionData(handleFlutterMessage);
+</script>
+
+<style>
+.app {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+button {
+  display: block;
+  margin: 10px auto;
+  padding: 10px 20px;
+  background-color: #0056b3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #004494;
+}
+
+pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+ul {
+  padding-left: 20px;
+}
+
+li {
+  margin-bottom: 5px;
+  color: #555;
 }
 </style>
