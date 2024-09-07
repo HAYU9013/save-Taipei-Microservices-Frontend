@@ -9,8 +9,10 @@
         <!-- 活動列表頁籤 -->
         <div v-if="activeTab === 0" class="activities-list">
             <!-- <h1>活動列表</h1> -->
-            <ul>
-                <li v-for="activity in activities" :key="activity.id" class="activity-item">
+            <button @click="handleSwitchFollow" class="switch-btn">{{ showFollow ? '顯示未追蹤活動' : '顯示追蹤活動' }}</button>
+            <ul v-if="!showFollow" class="unfollow-list">
+                <li v-for="activity in unfollowActivities " :key="activity.id" class="activity-item">
+                    <h2 class="page-title">活動列表</h2>
                     <div class="activity-content">
                         <!-- 標題 -->
                         <h3 class="activity-title">{{ activity.title }}</h3>
@@ -46,11 +48,54 @@
                                 <span>{{ new Date(activity.time).toLocaleString() }}</span>
                             </div>
                             <!-- 參與按鈕 -->
-                            <button class="join-button">參與</button>
+                            <button class="join-button" @click="handleFollow(activity.title)">參與</button>
                         </div>
                     </div>
                 </li>
             </ul>
+            <ul v-if="showFollow" class="follow-list">
+                <h2 class="page-title">追蹤列表</h2>
+                <li v-for="activity in followActivities" :key="activity.id" class="activity-item">
+                    <div class="activity-content">
+                        <!-- 標題 -->
+                        <h3 class="activity-title">{{ activity.title }}</h3>
+                        <!-- 描述 -->
+                        <p class="activity-description">{{ activity.description }}</p>
+                        <!-- 地圖 -->
+                        <div v-if="activity.location" class="map-container">
+                            <iframe width="100%" height="300" frameborder="0" scrolling="no" marginheight="0"
+                                marginwidth="0"
+                                :src="'https://maps.google.com/maps?width=100%25&amp;height=300&amp;hl=zh-TW&amp;q=' + encodeURIComponent(activity.location) + '&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed'">
+                            </iframe>
+                        </div>
+                        <!-- 地點與時間 -->
+                        <div class="activity-details">
+                            <!-- 地點 -->
+                            <div class="activity-location">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path
+                                        d="M12 2C8.13401 2 5 5.13401 5 9C5 13.3137 12 22 12 22C12 22 19 13.3137 19 9C19 5.13401 15.866 2 12 2ZM12 11.5C11.1716 11.5 10.5 10.8284 10.5 10C10.5 9.17157 11.1716 8.5 12 8.5C12.8284 8.5 13.5 9.17157 13.5 10C13.5 10.8284 12.8284 11.5 12 11.5Z" />
+                                </svg>
+                                <span>{{ activity.location }}</span>
+                            </div>
+                            <!-- 時間 -->
+                            <div class="activity-time">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                                <span>{{ new Date(activity.time).toLocaleString() }}</span>
+                            </div>
+                            <!-- 參與按鈕 -->
+                            <button class="join-button" @click="handleFollow(activity.title)">取消參與</button>
+                        </div>
+                    </div>
+                </li>
+            </ul>       
         </div>
 
         <!-- 活動投票頁籤 -->
@@ -79,6 +124,7 @@
 import VoteOptions from '@/components/VoteOptions.vue';
 import { Chart } from 'chart.js';
 import axios from 'axios';
+import { handleError } from 'vue';
 
 export default {
     components: {
@@ -86,10 +132,13 @@ export default {
     },
     data() {
         return {
-            activities: [],
+            allActivities: [],
+            unfollowActivities: [],
+            followActivities: [],
             activities2: [],
             votedActivities: {},
-            activeTab: 0
+            activeTab: 0,
+            showFollow: false
         };
     },
     methods: {
@@ -106,10 +155,32 @@ export default {
             fetch('https://taipei-microservices-initiative-haskson.onrender.com/api/activitys/all')
                 .then(response => response.json())
                 .then(data => {
-                    this.activities = data;
+                    this.allActivities = data;
                 })
                 .catch(error => {
                     console.error('Error fetching activities:', error);
+                });
+        },
+
+        fetchUnfollowActivities() {
+            fetch('https://taipei-microservices-initiative-haskson.onrender.com/api/users/unfollow/1')
+                .then(response => response.json())
+                .then(data => {
+                    this.unfollowActivities = data;
+                })
+                .catch(error => {
+                    console.error('Error fetching unfollow activities:', error);
+                });
+        },
+
+        fetchFollowActivities() {
+            fetch('https://taipei-microservices-initiative-haskson.onrender.com/api/users/follow/1')
+                .then(response => response.json())
+                .then(data => {
+                    this.followActivities = data;
+                })
+                .catch(error => {
+                    console.error('Error fetching follow activities:', error);
                 });
         },
 
@@ -131,6 +202,21 @@ export default {
                 })
                 .catch(error => {
                     console.error('投票失敗', error);
+                });
+        },
+
+        handleSwitchFollow() {
+            this.showFollow = !this.showFollow;
+        },
+
+        handleFollow(activityTitle) {
+            axios.post(`https://taipei-microservices-initiative-haskson.onrender.com/api/users/follow/${activityTitle}`)
+                .then(() => {
+                    this.fetchUnfollowActivities();
+                    this.fetchFollowActivities();
+                })
+                .catch(error => {
+                    console.error('追蹤活動失敗', error);
                 });
         },
 
@@ -162,6 +248,8 @@ export default {
     },
     created() {
         this.fetchActivities();
+        this.fetchUnfollowActivities();
+        this.fetchFollowActivities();
         this.fetchActivities2();
     }
 };
@@ -368,6 +456,17 @@ export default {
 .floating-button:hover {
     background-color: #0097a7;
     transform: translateY(-5px);
+}
+
+.switch-btn {
+    background-color: #00bcd4;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
 }
 
 @keyframes float {
