@@ -11,8 +11,8 @@
         <div v-if="activeTab === 0" class="activities-list">
             <button @click="handleSwitchFollow" class="switch-btn">{{ showFollow ? '顯示未追蹤活動' : '顯示追蹤活動' }}</button>
             <ul v-if="!showFollow" class="unfollow-list">
+                <h2 class="page-title">活動列表</h2>
                 <li v-for="activity in unfollowActivities " :key="activity.id" class="activity-item">
-                    <h2 class="page-title">活動列表</h2>
                     <div class="activity-content">
                         <!-- 標題 -->
                         <h3 class="activity-title">{{ activity.title }}</h3>
