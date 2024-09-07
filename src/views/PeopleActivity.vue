@@ -9,7 +9,6 @@
 
         <!-- 活動列表頁籤 -->
         <div v-if="activeTab === 0" class="activities-list">
-            <!-- <h1>活動列表</h1> -->
             <button @click="handleSwitchFollow" class="switch-btn">{{ showFollow ? '顯示未追蹤活動' : '顯示追蹤活動' }}</button>
             <ul v-if="!showFollow" class="unfollow-list">
                 <li v-for="activity in unfollowActivities " :key="activity.id" class="activity-item">
@@ -28,7 +27,6 @@
                         </div>
                         <!-- 地點與時間 -->
                         <div class="activity-details">
-                            <!-- 地點 -->
                             <div class="activity-location">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -38,7 +36,6 @@
                                 </svg>
                                 <span>{{ activity.location }}</span>
                             </div>
-                            <!-- 時間 -->
                             <div class="activity-time">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -48,51 +45,7 @@
                                 </svg>
                                 <span>{{ new Date(activity.time).toLocaleString() }}</span>
                             </div>
-                            <!-- 參與按鈕 -->
                             <button class="join-button" @click="handleFollow(activity.title)">參與</button>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-            <ul v-if="showFollow" class="follow-list">
-                <h2 class="page-title">追蹤列表</h2>
-                <li v-for="activity in followActivities" :key="activity.id" class="activity-item">
-                    <div class="activity-content">
-                        <!-- 標題 -->
-                        <h3 class="activity-title">{{ activity.title }}</h3>
-                        <!-- 描述 -->
-                        <p class="activity-description">{{ activity.description }}</p>
-                        <!-- 地圖 -->
-                        <div v-if="activity.location" class="map-container">
-                            <iframe width="100%" height="300" frameborder="0" scrolling="no" marginheight="0"
-                                marginwidth="0"
-                                :src="'https://maps.google.com/maps?width=100%25&amp;height=300&amp;hl=zh-TW&amp;q=' + encodeURIComponent(activity.location) + '&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed'">
-                            </iframe>
-                        </div>
-                        <!-- 地點與時間 -->
-                        <div class="activity-details">
-                            <!-- 地點 -->
-                            <div class="activity-location">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                    <path
-                                        d="M12 2C8.13401 2 5 5.13401 5 9C5 13.3137 12 22 12 22C12 22 19 13.3137 19 9C19 5.13401 15.866 2 12 2ZM12 11.5C11.1716 11.5 10.5 10.8284 10.5 10C10.5 9.17157 11.1716 8.5 12 8.5C12.8284 8.5 13.5 9.17157 13.5 10C13.5 10.8284 12.8284 11.5 12 11.5Z" />
-                                </svg>
-                                <span>{{ activity.location }}</span>
-                            </div>
-                            <!-- 時間 -->
-                            <div class="activity-time">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <polyline points="12 6 12 12 16 14"></polyline>
-                                </svg>
-                                <span>{{ new Date(activity.time).toLocaleString() }}</span>
-                            </div>
-                            <!-- 參與按鈕 -->
-                            <button class="join-button" @click="handleFollow(activity.title)">取消參與</button>
                         </div>
                     </div>
                 </li>
@@ -101,35 +54,50 @@
 
         <!-- 活動投票頁籤 -->
         <div v-if="activeTab === 1" class="vote-page">
-            <!-- <h2 class="page-title">活動投票</h2> -->
             <div v-if="activities2.length === 0" class="empty-message">目前沒有可供投票的活動。</div>
             <div v-for="activity in activities2" :key="activity.id" class="activity-card"
                 :class="{ 'voted': votedActivities[activity.id] }">
                 <h3 class="activity-title">{{ activity.name }}</h3>
-                <div v-if="!votedActivities[activity.id]">
-                </div>
-                <div v-else class="voted-message">
-                    你已經對此活動投過票了！
-                </div>
                 <VoteOptions :options="activity.options" :showResults="true"
                     @vote="(optionId) => handleVote(activity.id, optionId)" />
             </div>
         </div>
 
-        <div v-if="activeTab === 2" class="vote-page">
+        <!-- AI導遊頁籤 -->
+        <div v-if="activeTab === 2" class="ai-tour-guide">
+            <h1 class="title">旅遊行程安排</h1>
+            <form @submit.prevent="submitItinerary" class="form-container">
+                <input type="text" v-model="form.location" placeholder="輸入地點" required />
+                <input type="text" v-model="form.description" placeholder="輸入行程描述" required />
+                <button type="submit" class="submit-btn">送出行程</button>
+            </form>
 
+            <div v-if="recommendedLocations.length > 0" class="map-container">
+                <div v-for="(location, index) in recommendedLocations" :key="index" class="location-item">
+                    <iframe width="100%" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
+                        :src="'https://maps.google.com/maps?width=100%25&amp;height=300&amp;hl=zh-TW&amp;q=' + encodeURIComponent(location) + '&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed&disableDefaultUI=true&zoomControl=false&mapTypeControl=false&scaleControl=false&streetViewControl=false'"
+                        allowfullscreen aria-hidden="false" tabindex="0">
+                    </iframe>
+                </div>
+            </div>
+
+            <div v-if="mes" class="response-card">
+                <div class="response-card-header">AI 回應結果</div>
+                <div class="response-card-content" v-html="parseMarkdown(mes)"></div>
+            </div>
         </div>
     </div>
+
     <div class="floating-button" @click="handleFloatingButtonClick">+</div>
-
-
 </template>
 
 <script>
 import VoteOptions from '@/components/VoteOptions.vue';
-import { Chart } from 'chart.js';
 import axios from 'axios';
-import { handleError } from 'vue';
+import OpenAI from "openai";
+import { marked } from "marked";
+let kkk = "c2stcHJvai1jS2M0c3NFNkpPQWFycFN4QnFQYmxfMmtOdXBxbXJId05abUppdVRtdm84ZjJrR2ZONW1fX2hFOWdJVDNCbGJrRkpRekpTd2hGRkJuUGFqNVlHazBwd1BNdmdvb0lKeXQyMVd3cmZMNUR6aDU5VXV4VmxLRmNjZmdwZGNB";
+const decodedStr = atob(kkk);
 
 export default {
     components: {
@@ -143,16 +111,20 @@ export default {
             activities2: [],
             votedActivities: {},
             activeTab: 0,
-            showFollow: false
+            showFollow: false,
+            form: {
+                location: '',
+                description: ''
+            },
+            recommendedLocations: [],
+            mes: null
         };
     },
     methods: {
         handleFloatingButtonClick() {
             if (this.activeTab === 0) {
-                // 當前tab是活動列表，跳轉到 "/"
-                this.$router.push('/home');
+                this.$router.push('/');
             } else if (this.activeTab === 1) {
-                // 當前tab是活動投票，跳轉到 "/create-activity"
                 this.$router.push('/create-activity');
             }
         },
@@ -166,7 +138,6 @@ export default {
                     console.error('Error fetching activities:', error);
                 });
         },
-
         fetchUnfollowActivities() {
             fetch('https://taipei-microservices-initiative-haskson.onrender.com/api/users/unfollow/1')
                 .then(response => response.json())
@@ -177,7 +148,6 @@ export default {
                     console.error('Error fetching unfollow activities:', error);
                 });
         },
-
         fetchFollowActivities() {
             fetch('https://taipei-microservices-initiative-haskson.onrender.com/api/users/follow/1')
                 .then(response => response.json())
@@ -188,7 +158,6 @@ export default {
                     console.error('Error fetching follow activities:', error);
                 });
         },
-
         fetchActivities2() {
             axios.get('https://taipei-microservices-initiative-haskson.onrender.com/api/vote/activities')
                 .then(response => {
@@ -198,7 +167,6 @@ export default {
                     console.error("無法獲取活動數據", error);
                 });
         },
-
         handleVote(activityId, optionId) {
             axios.post('https://taipei-microservices-initiative-haskson.onrender.com/api/vote/submit', { option_id: optionId })
                 .then(() => {
@@ -209,11 +177,9 @@ export default {
                     console.error('投票失敗', error);
                 });
         },
-
         handleSwitchFollow() {
             this.showFollow = !this.showFollow;
         },
-
         handleFollow(activityTitle) {
             axios.post(`https://taipei-microservices-initiative-haskson.onrender.com/api/users/follow/${activityTitle}`)
                 .then(() => {
@@ -224,22 +190,56 @@ export default {
                     console.error('追蹤活動失敗', error);
                 });
         },
-
-        renderChart(activity) {
-            const ctx = document.getElementById(`chart-${activity.id}`);
-            new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: activity.options.map(option => option.name),
-                    datasets: [{
-                        data: activity.options.map(option => option.voteCount),
-                        backgroundColor: ['#00bcd4', '#50e3c2', '#f5a623', '#d0021b'],
-                    }]
-                },
-                options: {
-                    responsive: true,
+        async submitItinerary() {
+            const input = `地點: ${this.form.location}, 行程描述: ${this.form.description}，請根據這些資訊返回幾個旅遊地點，並以逗號分隔。`;
+            try {
+                const response = await fetch(
+                    "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=AIzaSyAsrQ5ObzfFJfGjwAIaMcRxp4gW-PMiELg",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: input }] }],
+                        }),
+                    }
+                );
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                console.log("0");
+                const data = await response.json();
+                const geminiResponse = data.candidates[0].content.parts[0].text;
+                this.recommendedLocations = geminiResponse.split(",");
+                let msg = this.recommendedLocations;
+                console.log("1");
+                const openai = new OpenAI({ apiKey: decodedStr, dangerouslyAllowBrowser: true });
+                const thread = await openai.beta.threads.create();
+                const message = await openai.beta.threads.messages.create(thread.id, {
+                    role: "user",
+                    content: msg[0] + "," + msg[1] + "," + msg[2],
+                });
+                console.log("2");
+                let run = await openai.beta.threads.runs.createAndPoll(thread.id, {
+                    assistant_id: "asst_8GkyxwRkgLuvSkUcvhkFIFKT",
+                    instructions:
+                        "Please address the user as Jane Doe. The user has a premium account.",
+                });
+                console.log("3");
+                if (run.status === "completed") {
+                    const messages = await openai.beta.threads.messages.list(run.thread_id);
+                    for (const message of messages.data.reverse()) {
+                        console.log(`${message.role} > ${message.content[0].text.value}`);
+                        this.mes = message.content[0].text.value;
+                    }
+                } else {
+                    console.log(run.status);
                 }
-            });
+            } catch (error) {
+                console.error("Error submitting itinerary:", error);
+            }
+        },
+        parseMarkdown(content) {
+            return marked(content);
         }
     },
     watch: {
@@ -268,14 +268,12 @@ export default {
     --background-color: #f8f9fa;
 }
 
-/* 活動列表樣式 */
 .activities-list {
     max-width: 100%;
     margin: 20px auto;
     padding: 15px;
     background: #ffffff;
     border-radius: 12px;
-
 }
 
 .activity-item {
@@ -296,34 +294,6 @@ export default {
     font-weight: 700;
     color: var(--primary-color);
     margin-bottom: 10px;
-    text-align: left;
-}
-
-.activity-description {
-    font-size: 1rem;
-    color: var(--secondary-color);
-    margin-bottom: 15px;
-    text-align: left;
-}
-
-/* 地點與時間 */
-.activity-details {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 15px;
-}
-
-.activity-location,
-.activity-time {
-    display: flex;
-    align-items: center;
-    color: var(--secondary-color);
-}
-
-.activity-location svg,
-.activity-time svg {
-    margin-right: 8px;
 }
 
 .join-button {
@@ -341,7 +311,6 @@ export default {
     background-color: #85e3ed;
 }
 
-/* Tabs 樣式 */
 .tabs {
     display: flex;
     justify-content: space-around;
@@ -357,17 +326,11 @@ export default {
     font-size: 1.2rem;
     cursor: pointer;
     color: #6c757d;
-    /* 默認灰色 */
-    position: relative;
-    font-weight: 400;
-    transition: color 0.3s, font-weight 0.3s;
 }
 
 .tabs button.active {
     color: #00bcd4;
-    /* 當前選中的字體顏色 */
     font-weight: 600;
-    /* 當前選中的字體加粗 */
 }
 
 .tabs button.active::after {
@@ -378,66 +341,14 @@ export default {
     width: 80%;
     height: 2px;
     background-color: #00bcd4;
-    /* 底線顏色 */
     transition: width 0.3s ease-in-out;
-}
-
-/* Tab 內容區域 */
-.tab-content {
-    padding: 20px;
-}
-
-
-/* 響應式設計 */
-@media (max-width: 768px) {
-
-    .activities-list,
-    .vote-page {
-        padding: 10px;
-    }
-
-    .activity-header h3 {
-        font-size: 1rem;
-    }
-
-    .activity-title {
-        font-size: 1.3rem;
-    }
-
-    .page-title {
-        font-size: 1.5rem;
-    }
-
-    .tabs button {
-        font-size: 1rem;
-    }
-}
-
-/* 響應式設計 */
-@media (max-width: 768px) {
-    .activity-item {
-        padding: 15px;
-    }
-
-    .activity-title {
-        font-size: 1.3rem;
-    }
-
-    .activity-description {
-        font-size: 0.9rem;
-    }
-
-    .join-button {
-        padding: 8px 16px;
-        font-size: 0.9rem;
-    }
 }
 
 .map-container {
     margin-top: 15px;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .floating-button {
@@ -463,17 +374,6 @@ export default {
     transform: translateY(-5px);
 }
 
-.switch-btn {
-    background-color: #00bcd4;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s ease;
-}
-
 @keyframes float {
     0% {
         transform: translateY(0);
@@ -486,5 +386,70 @@ export default {
     100% {
         transform: translateY(0);
     }
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    margin: 1em;
+    padding: 1em;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+input {
+    padding: 0.75em;
+    border: 1px solid #ccc;
+    border-radius: 0.5em;
+    font-size: 1.2em;
+    margin-bottom: 1em;
+    transition: all 0.3s ease-in-out;
+}
+
+input:focus {
+    border-color: #00bcd4;
+    box-shadow: 0 4px 8px rgba(0, 188, 212, 0.2);
+    outline: none;
+}
+
+.submit-btn {
+    padding: 0.75em 1.5em;
+    border: none;
+    border-radius: 0.5em;
+    background-color: #00bcd4;
+    color: #fff;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: #0097a7;
+    box-shadow: 0 4px 12px rgba(0, 188, 212, 0.3);
+}
+
+.response-card {
+    margin: 2em auto;
+    padding: 1.5em;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 800px;
+}
+
+.response-card-header {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #00bcd4;
+    margin-bottom: 1em;
+    text-align: center;
+}
+
+.response-card-content {
+    font-size: 1.2em;
+    color: #333;
+    line-height: 1.6em;
 }
 </style>
