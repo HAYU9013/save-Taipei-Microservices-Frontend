@@ -40,7 +40,7 @@ export default {
   },
   methods: {
     fetchActivities() {
-      axios.get('http://localhost:8081/api/vote/activities')
+      axios.get('https://taipei-microservices-initiative-haskson.onrender.com/api/vote/activities')
         .then(response => {
           this.activities = response.data;
         })
@@ -50,7 +50,7 @@ export default {
     },
 
     handleVote(activityId, optionId) {
-      axios.post('http://localhost:8081/api/vote/submit', { option_id: optionId })
+      axios.post('https://taipei-microservices-initiative-haskson.onrender.com/api/vote/submit', { option_id: optionId })
         .then(() => {
           // 投票成功後，將活動 ID 暫時保存在記憶體中
           this.votedActivities[activityId] = true;
@@ -96,16 +96,17 @@ export default {
 <style scoped>
 .vote-page {
   max-width: 800px;
-  margin: 0 auto;
+  margin: 40px auto;
   padding: 40px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
   background-color: #f8f9fa;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .page-title {
   text-align: center;
-  font-size: 32px;
+  font-size: 2rem;
   font-weight: 600;
   color: #343a40;
   margin-bottom: 30px;
@@ -119,12 +120,17 @@ export default {
 }
 
 .activity-card {
-  margin-bottom: 40px;
+  margin-bottom: 30px;
   padding: 30px;
   background-color: #ffffff;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.activity-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 .activity-card.voted {
@@ -133,13 +139,13 @@ export default {
 }
 
 .activity-title {
-  font-size: 24px;
+  font-size: 1.75rem;
   font-weight: 500;
   color: #495057;
   margin-bottom: 15px;
   text-align: center;
-  padding-bottom: 5px;
   border-bottom: 2px solid #6c757d;
+  padding-bottom: 10px;
 }
 
 .result-chart {
@@ -148,7 +154,7 @@ export default {
 
 .voted-message {
   text-align: center;
-  font-size: 16px;
+  font-size: 1rem;
   color: #6c757d;
   background-color: #f1f3f5;
   padding: 10px;
@@ -160,7 +166,18 @@ export default {
   transform: translateY(-5px);
 }
 
-.vote-page .activity-card.voted:hover {
-  transform: none;
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .vote-page {
+    padding: 20px;
+  }
+
+  .page-title {
+    font-size: 1.75rem;
+  }
+
+  .activity-title {
+    font-size: 1.5rem;
+  }
 }
 </style>

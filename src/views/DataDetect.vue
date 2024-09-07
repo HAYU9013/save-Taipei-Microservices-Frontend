@@ -61,50 +61,85 @@ const handleFlutterMessage = (event: { data: string }) => {
 useHandleConnectionData(handleFlutterMessage);
 </script>
 
-<style>
+<style scoped>
 .app {
     max-width: 600px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
     text-align: center;
+    font-size: 2rem;
+    color: #333;
     margin-bottom: 20px;
+    font-weight: 600;
 }
 
 button {
     display: block;
-    margin: 10px auto;
-    padding: 10px 20px;
+    margin: 20px auto;
+    padding: 12px 20px;
     background-color: #0056b3;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 button:hover {
     background-color: #004494;
+    transform: translateY(-2px);
+}
+
+button:active {
+    background-color: #003366;
+    transform: translateY(0);
 }
 
 pre {
     white-space: pre-wrap;
     word-wrap: break-word;
     background-color: #f0f0f0;
-    padding: 10px;
-    border-radius: 4px;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
 }
 
 ul {
-    padding-left: 20px;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
 }
 
 li {
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     color: #555;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .app {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.75rem;
+    }
+
+    button {
+        font-size: 0.9rem;
+        padding: 10px;
+    }
+
+    pre {
+        padding: 10px;
+    }
 }
 </style>

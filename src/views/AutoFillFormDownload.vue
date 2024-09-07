@@ -27,19 +27,21 @@ export default {
         async modifyPdf(userid, formname) {
             try {
                 // Fetch the PDF template
+
                 const response = await fetch(BaseURL + 'autofillform/'+formname);
                 console.log(BaseURL + 'autofillform/'+formname);
                 const arrayBuffer = await response.arrayBuffer();
 
                 // Fetch the user data
                 const userDataResponse = await fetch(BaseURL + 'users/' + userid);
+
                 const userData = await userDataResponse.json();
                 console.log(userData);
                 let a = "name";
                 console.log(userData[a]);
-
-                
+         
                 const pdfDetailsOringin = await fetch(BaseURL + 'autofillform/detail/' + formname);
+
                 const pdfDetailsfull = await pdfDetailsOringin.json();
                 const pdfDetailsText = pdfDetailsfull.detail;
                 const pdfDetails = JSON.parse(pdfDetailsText);
@@ -86,7 +88,9 @@ export default {
                             color: rgb(0, 0, 0+1),
                         });
                     } else if (detail.datatype == "image") {
+
                         const imgResponse = await fetch(BaseURL + 'users/image/' + userData[detail.data]);
+
                         const imageBytes = await imgResponse.arrayBuffer();
                         const embeddedImage = await pdfDoc.embedPng(imageBytes);
                         pages[detail.page].drawImage(embeddedImage, {
@@ -138,17 +142,45 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Adjust as needed */
+    height: 100vh;
+    background-color: #f8f9fa;
+    padding: 20px;
 }
 
 .button-container {
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Adjust spacing between buttons as needed */
+    gap: 15px;
+    align-items: center;
 }
 
 .button {
-    padding: 10px 20px;
-    font-size: 16px;
+    padding: 15px 30px;
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.button:hover {
+    background-color: #0056b3;
+    transform: translateY(-3px);
+}
+
+.button:active {
+    background-color: #003f7f;
+    transform: translateY(0);
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .button {
+        padding: 12px 25px;
+        font-size: 1rem;
+    }
 }
 </style>

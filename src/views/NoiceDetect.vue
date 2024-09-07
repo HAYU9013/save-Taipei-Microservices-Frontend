@@ -169,32 +169,38 @@ export default {
 <style scoped>
 .app {
     max-width: 600px;
-    margin: 20px auto;
-    padding: 20px;
-    background: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 40px auto;
+    padding: 30px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
-    color: #333;
     text-align: center;
+    font-size: 2rem;
+    color: #333;
     margin-bottom: 20px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
 }
 
 button {
-    padding: 10px 20px;
+    padding: 12px 20px;
     margin: 10px;
     background-color: #0056b3;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    display: inline-block;
 }
 
 button:hover {
     background-color: #004494;
+    transform: translateY(-2px);
 }
 
 button:disabled {
@@ -202,17 +208,35 @@ button:disabled {
     cursor: not-allowed;
 }
 
+.error-message {
+    color: red;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
 audio,
 video {
     display: block;
     margin-top: 20px;
+    max-width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* 添加錯誤訊息樣式 */
-.error-message {
-    color: red;
-    font-weight: bold;
-    margin-bottom: 10px;
-    text-align: center;
+/* 手機響應式設計 */
+@media (max-width: 768px) {
+    .app {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.75rem;
+    }
+
+    button {
+        font-size: 0.9rem;
+        padding: 10px;
+    }
 }
 </style>

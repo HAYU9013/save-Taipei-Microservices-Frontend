@@ -37,7 +37,7 @@ export default {
     },
     methods: {
         fetchActivities() {
-            fetch('http://localhost:8081/api/activitys/all')
+            fetch('https://taipei-microservices-initiative-haskson.onrender.com/api/activitys/all')
                 .then(response => response.json())
                 .then(data => {
                     this.activities = data;
@@ -68,6 +68,7 @@ export default {
     font-size: 2rem;
     color: #333;
     margin-bottom: 30px;
+    font-weight: 600;
 }
 
 .activities-list ul {
@@ -99,6 +100,7 @@ export default {
     font-size: 1.5rem;
     margin: 0;
     color: #0056b3;
+    font-weight: bold;
 }
 
 .activity-time {
@@ -132,5 +134,24 @@ export default {
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* 手機響應樣式 */
+@media (max-width: 768px) {
+    .activities-list {
+        padding: 20px;
+    }
+
+    .activity-header h3 {
+        font-size: 1.25rem;
+    }
+
+    .activity-item {
+        padding: 15px;
+    }
+
+    .activity-description {
+        font-size: 0.9rem;
+    }
 }
 </style>

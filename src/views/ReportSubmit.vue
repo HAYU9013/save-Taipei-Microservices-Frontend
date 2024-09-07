@@ -1,16 +1,11 @@
 <template>
     <div class="report-submit">
-        <img
-            src="@/assets/bloodtrail.png"
-            alt="Report"
-            class="report-logo"
-            @click="hadleClick"
-        />
+        <img src="@/assets/report_list.png" alt="Report" class="report-logo" @click="hadleClick" />
         <h1>提交建議或問題</h1>
         <form @submit.prevent="submitForm">
             <div class="form-group">
                 <label for="title">標題:</label>
-                <input id="title" v-model="form.title" type="text" required/>
+                <input id="title" v-model="form.title" type="text" required />
             </div>
             <div class="form-group">
                 <label for="type">類型:</label>
@@ -57,10 +52,10 @@ export default {
             formData = {
                 title: this.form.title,
                 type: this.form.type,
-                description: this.form.description, 
+                description: this.form.description,
                 time: currnetTime.toISOString()
             };
-            fetch('http://localhost:8081/api/report/', {
+            fetch('https://taipei-microservices-initiative-haskson.onrender.com/api/report/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -93,22 +88,6 @@ export default {
 </script>
 
 <style scoped>
-.report-logo {
-    display: block;
-    margin: 0 auto;
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    cursor: default;
-}
-.report-type {
-    width: 100%;
-    padding: 10px;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-}
-
 .report-submit {
     max-width: 700px;
     margin: 40px auto;
@@ -117,29 +96,51 @@ export default {
     border-radius: 12px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
+
 h1 {
     text-align: center;
     font-size: 2rem;
     color: #333;
     margin-bottom: 30px;
+    font-weight: 600;
 }
+
 .form-group {
     margin-bottom: 20px;
 }
+
 label {
     display: block;
     margin-bottom: 8px;
     font-weight: bold;
     color: #333;
 }
+
 input[type="text"],
-textarea {
+textarea,
+select {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     font-size: 1rem;
     border: 1px solid #ccc;
     border-radius: 6px;
+    background: #fafafa;
+    transition: border-color 0.3s ease;
 }
+
+input[type="text"]:focus,
+textarea:focus,
+select:focus {
+    border-color: #0056b3;
+    outline: none;
+    background: #fff;
+}
+
+textarea {
+    height: 120px;
+    resize: none;
+}
+
 .submit-btn {
     display: block;
     width: 100%;
@@ -153,15 +154,36 @@ textarea {
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
-textarea {
-    height: 120px;
-}
+
 .submit-btn:hover {
     background-color: #004494;
     transform: translateY(-2px);
 }
+
 .submit-btn:active {
     background-color: #003366;
     transform: translateY(0);
+}
+
+/* 手機響應式設計 */
+@media (max-width: 768px) {
+    .report-submit {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.75rem;
+    }
+
+    .submit-btn {
+        font-size: 1rem;
+        padding: 12px;
+    }
+
+    input[type="text"],
+    textarea {
+        padding: 10px;
+        font-size: 0.95rem;
+    }
 }
 </style>
