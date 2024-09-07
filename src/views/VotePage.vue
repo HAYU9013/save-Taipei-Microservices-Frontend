@@ -1,6 +1,6 @@
 <template>
   <div class="vote-page">
-    <h2 class="page-title">活動投票</h2>
+    <!-- <h2 class="page-title">活動投票</h2> -->
     <div v-if="activities.length === 0" class="empty-message">目前沒有可供投票的活動。</div>
     <div v-for="activity in activities" :key="activity.id" class="activity-card"
       :class="{ 'voted': votedActivities[activity.id] }">

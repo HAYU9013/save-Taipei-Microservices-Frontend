@@ -20,7 +20,7 @@ const toggleMenu = () => {
           <router-link to="/activities" @click="toggleMenu">查看活動</router-link>
           <router-link to="/auto-fill-form" @click="toggleMenu">自動填表</router-link>
           <router-link to="/report" @click="toggleMenu">回報問題</router-link>
-          <router-link to="/detect" @click="toggleMenu">測試</router-link>
+          <!-- <router-link to="/detect" @click="toggleMenu">測試</router-link> -->
           <router-link to="/data-detect" @click="toggleMenu">資料檢測</router-link>
           <router-link to="/vote" @click="toggleMenu">活動投票</router-link>
           <router-link to="/create-activity" @click="toggleMenu">增加活動與選項</router-link>

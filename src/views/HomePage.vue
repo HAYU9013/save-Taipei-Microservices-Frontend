@@ -1,6 +1,9 @@
 <template>
     <div class="home">
-        <h1>發起活動</h1>
+        <div class="top-bar">
+            <button class="back-button" @click="$router.go(-1)">&lt;</button>
+            <h2 class="page-title">發起活動</h2>
+        </div>
         <form @submit.prevent="submitForm">
             <div class="form-group">
                 <label for="title">活動標題:</label>
@@ -13,10 +16,10 @@
             <div class="form-group">
                 <label for="location">活動地點:</label>
                 <input id="location" v-model="form.location" type="text" required>
-                <!-- 只有在地點有文字时才显示地圖 -->
+                <!-- 地點有文字时顯示地圖 -->
                 <div v-if="form.location" class="map-container">
                     <iframe width="100%" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
-                        :src="'https://maps.google.com/maps?width=100%25&amp;height=300&amp;hl=zh-TW&amp;q=' + encodeURIComponent(form.location) + '+(My%20Business%20Name)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed&disableDefaultUI=true&zoomControl=false&mapTypeControl=false&scaleControl=false&streetViewControl=false'"
+                        :src="'https://maps.google.com/maps?width=100%25&amp;height=300&amp;hl=zh-TW&amp;q=' + encodeURIComponent(form.location) + '&t=&z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed'"
                         allowfullscreen aria-hidden="false" tabindex="0"></iframe>
                 </div>
             </div>
@@ -59,19 +62,9 @@ export default {
                 method: 'POST',
                 body: formData,
             })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(data => {
-                    if (data.path) {
-                        console.log("Image uploaded, URL:", data.path);
-                        this.submitEventDetails(data.path);
-                    } else {
-                        throw new Error('Failed to upload image. No image URL provided.');
-                    }
+                    this.submitEventDetails(data.path);
                 })
                 .catch(error => {
                     console.error('Error uploading image:', error);
@@ -79,8 +72,7 @@ export default {
                 });
         },
         submitEventDetails(imageUrl) {
-            let dateObject = new Date(this.form.time);
-            let formattedTime = dateObject.toISOString();
+            let formattedTime = new Date(this.form.time).toISOString();
 
             let detailsData = {
                 title: this.form.title,
@@ -97,14 +89,8 @@ export default {
                 },
                 body: JSON.stringify(detailsData),
             })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok: ' + response.statusText);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log("Activity submitted with image URL:", data);
+                .then(response => response.json())
+                .then(() => {
                     alert('活動成功提交！');
                     this.resetForm();
                 })
@@ -114,17 +100,58 @@ export default {
                 });
         },
         resetForm() {
-            this.form.title = '';
-            this.form.description = '';
-            this.form.location = '';
-            this.form.time = '';
-            this.form.image = null;
+            this.form = {
+                title: '',
+                description: '',
+                location: '',
+                time: '',
+                image: null
+            };
         }
     }
 }
 </script>
 
 <style scoped>
+/* Top Bar */
+.top-bar {
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    color: #00bcd4;
+    padding: 15px;
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.back-button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #00bcd4;
+    cursor: pointer;
+    margin-right: 15px;
+}
+
+.page-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #00bcd4;
+    margin: 0 auto;
+    position: relative;
+}
+
+.page-title::after {
+    content: '';
+    display: block;
+    width: 50%;
+    height: 2px;
+    background-color: #00bcd4;
+    margin: 5px auto 0;
+}
+
+/* Form Styling */
 .home {
     max-width: 700px;
     margin: 40px auto;
@@ -134,49 +161,35 @@ export default {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
-h1 {
-    text-align: center;
-    font-size: 2rem;
-    color: #333;
-    margin-bottom: 30px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-}
-
 .form-group {
     margin-bottom: 20px;
 }
 
 label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
     display: block;
     margin-bottom: 8px;
-    font-weight: bold;
-    color: #333;
-    font-size: 1rem;
 }
 
-input[type="text"],
-input[type="datetime-local"],
-textarea,
-input[type="file"] {
+input,
+textarea {
     width: 100%;
     padding: 12px;
     border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 1rem;
-    color: #333;
-    background: #fafafa;
     transition: border-color 0.3s ease;
     box-sizing: border-box;
+    background: #fafafa;
 }
 
-input[type="text"]:focus,
-input[type="datetime-local"]:focus,
-textarea:focus,
-input[type="file"]:focus {
-    border-color: #0056b3;
-    outline: none;
+input:focus,
+textarea:focus {
+    border-color: #00bcd4;
     background: #fff;
+    outline: none;
 }
 
 textarea {
@@ -191,11 +204,12 @@ textarea {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
 
+/* Submit Button */
 .submit-btn {
     display: block;
     width: 100%;
     padding: 15px;
-    background-color: #0056b3;
+    background-color: #00bcd4;
     color: white;
     border: none;
     border-radius: 6px;
@@ -207,35 +221,23 @@ textarea {
 }
 
 .submit-btn:hover {
-    background-color: #004494;
+    background-color: #0097a7;
     transform: translateY(-2px);
 }
 
 .submit-btn:active {
-    background-color: #003366;
-    transform: translateY(0);
+    background-color: #007bff;
 }
 
-/* 手機響應樣式 */
+/* Responsive Design */
 @media (max-width: 768px) {
     .home {
         padding: 20px;
     }
 
-    h1 {
-        font-size: 1.75rem;
-    }
-
     .submit-btn {
         font-size: 1rem;
         padding: 12px;
-    }
-
-    input[type="text"],
-    input[type="datetime-local"],
-    textarea {
-        padding: 10px;
-        font-size: 0.95rem;
     }
 }
 </style>

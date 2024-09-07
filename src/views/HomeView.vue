@@ -338,7 +338,39 @@ const handleFlutterMessage = (event: { data: string }) => {
 useHandleConnectionData(handleFlutterMessage);
 </script>
 
-<style>
+<style lang="postcss">
+.search-button {
+  @apply bg-primary-500 p-1 rounded-lg;
+  @apply h-11 w-11;
+  @apply flex justify-center items-center;
+  @apply -translate-x-1;
+}
+
+.option-title {
+  @apply relative;
+  @apply before:content-[''];
+  @apply before:w-1.5 before:h-0.5;
+  @apply before:bg-primary-500;
+  @apply before:inline-block;
+  @apply before:absolute before:-left-3.5 before:top-1/2 before:-translate-y-1/2;
+}
+
+.situation-button {
+  @apply text-primary-500;
+  @apply first:rounded-l last:rounded-r;
+  @apply border border-primary-500;
+  @apply py-0.5;
+
+  &--active {
+    @apply bg-primary-500 text-white;
+  }
+}
+</style>
+
+
+
+
+<!-- <style>
 .app {
   max-width: 600px;
   margin: 20px auto;
@@ -384,4 +416,4 @@ li {
   margin-bottom: 5px;
   color: #555;
 }
-</style>
+</style> -->

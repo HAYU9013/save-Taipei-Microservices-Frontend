@@ -21,6 +21,8 @@ import VotePage from "../views/VotePage.vue"; // 確保這行存在
 import CreateVoteActivity from '../views/CreateVoteActivity.vue';  // 新增這一行
 import ItineraryPage from "../views/ItineraryPage.vue";  // 新增這一行
 
+import PeopleActivity from '@/views/PeopleActivity.vue';
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -99,6 +101,11 @@ const router = createRouter({
       path: "/itinerary",  // 新增行程頁面的路徑
       name: "ItineraryPage",
       component: ItineraryPage,
+    },
+    {
+      path: '/people-activity',
+      name: 'people-activity',
+      component: PeopleActivity,
     },
     {
       path: '/coupon',

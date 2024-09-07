@@ -1,6 +1,9 @@
 <template>
   <div class="create-activity">
-    <h2>新增活動</h2>
+    <div class="top-bar">
+      <button class="back-button" @click="$router.go(-1)">&lt;</button>
+      <h2 class="page-title">活動列表</h2>
+    </div>
     <form @submit.prevent="submitActivity" class="activity-form">
       <div class="form-group">
         <label for="activity-name">活動名稱：</label>
@@ -16,12 +19,10 @@
       </div>
       <button type="submit" class="btn-submit">提交活動</button>
     </form>
-    <!--p v-if="successMessage" class="success">{{ successMessage }}</p!-->
   </div>
 </template>
 
 <script>
-
 export default {
   data() {
     return {
@@ -31,15 +32,12 @@ export default {
     };
   },
   methods: {
-    // 新增選項
     addOption() {
       this.options.push({ label: '' });
     },
-    // 移除選項
     removeOption(index) {
       this.options.splice(index, 1);
     },
-    // 提交活動
     submitActivity() {
       const payload = {
         name: this.activityName,
@@ -60,13 +58,13 @@ export default {
           return response.json();
         })
         .then(data => {
-          alert(data.message)
+          alert(data.message);
           this.activityName = '';
           this.options = [{ label: '' }];
         })
         .catch(error => {
-          alert("新增活動發生錯誤，內容可能包含不宜內容")
-          console.error("新增活動發生錯誤", error);
+          alert('新增活動發生錯誤，內容可能包含不宜內容');
+          console.error('新增活動發生錯誤', error);
         });
     }
   }
@@ -74,6 +72,49 @@ export default {
 </script>
 
 <style scoped>
+/* Top Bar */
+.top-bar {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  color: #00bcd4;
+  padding: 15px 10px;
+  border-bottom: 1px solid #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #00bcd4;
+  cursor: pointer;
+  margin-right: 15px;
+}
+
+.back-button:hover {
+  color: #0097a7;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #00bcd4;
+  margin: 0 auto;
+  position: relative;
+}
+
+.page-title::after {
+  content: '';
+  display: block;
+  width: 50%;
+  height: 2px;
+  background-color: #00bcd4;
+  margin: 5px auto 0;
+}
+
+/* Create Activity Form Styling */
 .create-activity {
   max-width: 600px;
   margin: 40px auto;
@@ -83,27 +124,16 @@ export default {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
-h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #343a40;
-  font-size: 2rem;
-  font-weight: 600;
-}
-
-.activity-form {
-  display: flex;
-  flex-direction: column;
-}
-
 .form-group {
   margin-bottom: 20px;
 }
 
 label {
+  font-size: 1rem;
   font-weight: 600;
-  margin-bottom: 10px;
   color: #495057;
+  display: block;
+  margin-bottom: 8px;
 }
 
 input[type="text"] {
@@ -113,11 +143,13 @@ input[type="text"] {
   border-radius: 6px;
   font-size: 1rem;
   color: #495057;
+  background: #fafafa;
   transition: border-color 0.3s ease;
 }
 
 input[type="text"]:focus {
-  border-color: #007bff;
+  border-color: #00bcd4;
+  background: #fff;
   outline: none;
 }
 
@@ -148,7 +180,7 @@ input[type="text"]:focus {
 }
 
 .btn-add-option {
-  background-color: #007bff;
+  background-color: #00bcd4;
   color: white;
   padding: 10px 15px;
   border: none;
@@ -159,11 +191,11 @@ input[type="text"]:focus {
 }
 
 .btn-add-option:hover {
-  background-color: #0056b3;
+  background-color: #0097a7;
 }
 
 .btn-submit {
-  background-color: #28a745;
+  background-color: #00bcd4;
   color: white;
   padding: 12px 15px;
   border: none;
@@ -176,22 +208,18 @@ input[type="text"]:focus {
 }
 
 .btn-submit:hover {
-  background-color: #218838;
+  background-color: #0097a7;
 }
 
 .btn-submit:active {
-  background-color: #1e7e34;
+  background-color: #007bff;
   transform: translateY(1px);
 }
 
-/* 響應式設計 */
+/* Responsive Design */
 @media (max-width: 768px) {
   .create-activity {
     padding: 20px;
-  }
-
-  h2 {
-    font-size: 1.75rem;
   }
 
   input[type="text"] {
