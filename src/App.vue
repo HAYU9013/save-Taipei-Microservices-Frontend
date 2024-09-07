@@ -10,25 +10,23 @@ const toggleMenu = () => {
 
 <template>
   <div id="app">
-    <nav>
+    <!-- <nav>
       <div class="nav-container">
         <div class="burger-menu" @click="toggleMenu">
-          &#9776; <!-- 漢堡菜單圖標 -->
+          &#9776;
         </div>
         <div :class="{ 'nav-links': true, open: isMenuOpen }">
-          <router-link to="/" exact @click="toggleMenu">首頁</router-link>
+          <router-link to="/" exact @click="toggleMenu">新增活動</router-link>
           <router-link to="/activities" @click="toggleMenu">查看活動</router-link>
-          <router-link to="/user-follow-list" @click="toggleMenu">追蹤列表</router-link>
           <router-link to="/auto-fill-form" @click="toggleMenu">自動填表</router-link>
           <router-link to="/report" @click="toggleMenu">回報問題</router-link>
-          <!-- <router-link to="/detect" @click="toggleMenu">測試</router-link> -->
+
           <router-link to="/data-detect" @click="toggleMenu">資料檢測</router-link>
           <router-link to="/vote" @click="toggleMenu">活動投票</router-link>
           <router-link to="/create-activity" @click="toggleMenu">增加活動與選項</router-link>
-          <router-link to="/itinerary" @click="toggleMenu">旅遊行程安排</router-link>
         </div>
       </div>
-    </nav>
+    </nav> -->
     <div class="content">
       <router-view />
     </div>
@@ -118,7 +116,7 @@ nav {
 }
 
 .content {
-  margin-top: 80px;
+  margin-top: 40px;
   padding: 20px;
 }
 
