@@ -126,6 +126,11 @@ const router = createRouter({
       component: PeopleActivity,
     },
     {
+      path: '/home',
+      name: 'home',
+      component: HomePage,
+    },
+    {
       path: '/coupon',
       children: [
         {

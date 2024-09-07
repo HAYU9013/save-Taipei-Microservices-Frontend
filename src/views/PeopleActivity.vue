@@ -145,7 +145,7 @@ export default {
         handleFloatingButtonClick() {
             if (this.activeTab === 0) {
                 // 當前tab是活動列表，跳轉到 "/"
-                this.$router.push('/');
+                this.$router.push('/home');
             } else if (this.activeTab === 1) {
                 // 當前tab是活動投票，跳轉到 "/create-activity"
                 this.$router.push('/create-activity');
