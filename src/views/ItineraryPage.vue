@@ -37,6 +37,11 @@
 
 <script>
 import OpenAI from "openai";
+let kkk = "YXBwbGU="
+const decodedStr = atob(kkk);
+console.log(decodedStr)
+
+
 let msg = "";
 export default {
   data() {
@@ -97,7 +102,8 @@ export default {
       }
       
       console.log("1")
-const openai = new OpenAI({dangerouslyAllowBrowser: true});
+
+const openai = new OpenAI({apiKey: kkk,dangerouslyAllowBrowser: true});
 
 const thread = await openai.beta.threads.create();
 let mes;
