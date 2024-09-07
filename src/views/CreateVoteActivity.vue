@@ -1,65 +1,77 @@
 <template>
-    <div class="create-activity">
-      <h2>新增活動</h2>
-      <form @submit.prevent="submitActivity" class="activity-form">
-        <div class="form-group">
-          <label for="activity-name">活動名稱：</label>
-          <input type="text" id="activity-name" v-model="activityName" placeholder="請輸入活動名稱" required />
+  <div class="create-activity">
+    <h2>新增活動</h2>
+    <form @submit.prevent="submitActivity" class="activity-form">
+      <div class="form-group">
+        <label for="activity-name">活動名稱：</label>
+        <input type="text" id="activity-name" v-model="activityName" placeholder="請輸入活動名稱" required />
+      </div>
+      <div class="form-group">
+        <label>選項：</label>
+        <div v-for="(option, index) in options" :key="index" class="option-group">
+          <input type="text" v-model="options[index].label" placeholder="輸入選項名稱" required />
+          <button type="button" @click="removeOption(index)" class="btn-remove">移除</button>
         </div>
-        <div class="form-group">
-          <label>選項：</label>
-          <div v-for="(option, index) in options" :key="index" class="option-group">
-            <input type="text" v-model="options[index].label" placeholder="輸入選項名稱" required />
-            <button type="button" @click="removeOption(index)" class="btn-remove">移除</button>
-          </div>
-          <button type="button" @click="addOption" class="btn-add-option">新增選項</button>
-        </div>
-        <button type="submit" class="btn-submit">提交活動</button>
-      </form>
-      <p v-if="successMessage" class="success">{{ successMessage }}</p>
-    </div>
-  </template>
+        <button type="button" @click="addOption" class="btn-add-option">新增選項</button>
+      </div>
+      <button type="submit" class="btn-submit">提交活動</button>
+    </form>
+    <!--p v-if="successMessage" class="success">{{ successMessage }}</p!-->
+  </div>
+</template>
   
-  <script>
-  import axios from 'axios';
+<script>
   
-  export default {
-    data() {
-      return {
-        activityName: '', // 活動名稱
-        options: [{ label: '' }], // 活動的選項
-        successMessage: '', // 成功訊息
-      };
+export default {
+  data() {
+    return {
+      activityName: '', // 活動名稱
+      options: [{ label: '' }], // 活動的選項
+      successMessage: '', // 成功訊息
+    };
+  },
+  methods: {
+    // 新增選項
+    addOption() {
+      this.options.push({ label: '' });
     },
-    methods: {
-      // 新增選項
-      addOption() {
-        this.options.push({ label: '' });
-      },
-      // 移除選項
-      removeOption(index) {
-        this.options.splice(index, 1);
-      },
-      // 提交活動
-      submitActivity() {
-        const payload = {
-          name: this.activityName,
-          options: this.options.map(option => ({ label: option.label }))
-        };
-  
-        axios.post('http://localhost:8081/api/vote/create', payload)
-            .then(() => {
-                this.successMessage = '活動已成功新增！';
-                this.activityName = '';
-                this.options = [{ label: '' }];
-            })
-        .catch(error => {
-            console.error("無法新增活動", error);
-        });
-      }
+    // 移除選項
+    removeOption(index) {
+      this.options.splice(index, 1);
+    },
+    // 提交活動
+    submitActivity() {
+      const payload = {
+        name: this.activityName,
+        options: this.options.map(option => ({ label: option.label }))
+      };
+
+      fetch('http://localhost:8081/api/vote/create', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(payload),
+          })
+          .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then(data => {
+            alert(data.message)
+            this.activityName = '';
+            this.options = [{ label: '' }];
+          })
+      .catch(error => {
+          alert("新增活動發生錯誤")
+          console.error("新增活動發生錯誤", error);
+      });
     }
-  };
-  </script>
+  }
+};
+</script>
   
   <style scoped>
   .create-activity {
