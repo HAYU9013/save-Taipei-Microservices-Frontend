@@ -97,7 +97,7 @@ export default {
       }
       
       console.log("1")
-const openai = new OpenAI({ apiKey: 'API' , dangerouslyAllowBrowser: true});
+const openai = new OpenAI({ apiKey: OPENAI_API_KEY , dangerouslyAllowBrowser: true});
 
 const thread = await openai.beta.threads.create();
 let mes;
