@@ -54,7 +54,6 @@ export default {
         submitForm() {
             let formData = new FormData();
             formData.append('image', this.form.image);
-
             fetch('https://taipei-microservices-initiative-haskson.onrender.com/api/upload/image', {
                 method: 'POST',
                 body: formData,

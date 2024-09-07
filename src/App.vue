@@ -18,6 +18,7 @@ const toggleMenu = () => {
         <div :class="{ 'nav-links': true, open: isMenuOpen }">
           <router-link to="/" exact @click="toggleMenu">首頁</router-link>
           <router-link to="/activities" @click="toggleMenu">查看活動</router-link>
+          <router-link to="/user-follow-list" @click="toggleMenu">追蹤列表</router-link>
           <router-link to="/auto-fill-form" @click="toggleMenu">自動填表</router-link>
           <router-link to="/report" @click="toggleMenu">回報問題</router-link>
           <router-link to="/detect" @click="toggleMenu">測試</router-link>
