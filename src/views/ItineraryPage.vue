@@ -7,6 +7,7 @@
       <button type="submit">送出行程</button>
     </form>
 
+    <!-- 使用 Google Maps iframe 顯示多個推薦地點 -->
     <div v-if="recommendedLocations.length > 0" class="map-container">
       <div v-for="(location, index) in recommendedLocations" :key="index" class="location-item">
         <iframe
@@ -16,7 +17,7 @@
           scrolling="no"
           marginheight="0"
           marginwidth="0"
-          :src="'https://maps.google.com/maps?width=100%25&amp;height=300&amp;hl=zh-TW&amp;q=' + encodeURIComponent(location) + '+(My%20Location)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed&markers=color:red%7Clabel:L%7C' + encodeURIComponent(location)"
+          :src="'https://maps.google.com/maps?width=100%25&amp;height=300&amp;hl=zh-TW&amp;q=' + encodeURIComponent(location) + '&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed&disableDefaultUI=true&zoomControl=false&mapTypeControl=false&scaleControl=false&streetViewControl=false'"
           allowfullscreen
           aria-hidden="false"
           tabindex="0"
@@ -27,10 +28,16 @@
     <div v-if="responseMessage">
       <p>{{ responseMessage }}</p>
     </div>
+    <div v-if="mes">
+      <p>{{ mes }}</p>
+    </div>
+    <!-- message.content[0].text.value -->
   </div>
 </template>
 
 <script>
+import OpenAI from "openai";
+let msg = "";
 export default {
   data() {
     return {
@@ -40,15 +47,19 @@ export default {
       },
       recommendedLocations: [], // 存儲 gemini 推薦的多個地點
       responseMessage: null, // 儲存回應訊息
+      mes:null,
     };
   },
   methods: {
     async submitItinerary() {
+      // 構建發送到 gemini 的資料，包含地點和行程描述，並要求返回地點以逗號分隔
       const input = `地點: ${this.form.location}, 行程描述: ${this.form.description}，請根據這些資訊返回幾個旅遊地點，並以逗號分隔。例如：地點1, 地點2, 地點3`;
 
       try {
         const response = await fetch(
-          "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyAsrQ5ObzfFJfGjwAIaMcRxp4gW-PMiELg",
+          "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyAsrQ5ObzfFJfGjwAIaMcRxp4gW-PMiELg", // 替換為正確的 API 金鑰
+          // "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyAsrQ5ObzfFJfGjwAIaMcRxp4gW-PMiELg", // 替換為正確的 API 金鑰
+
           {
             method: "POST",
             headers: {
@@ -75,16 +86,92 @@ export default {
         const data = await response.json();
         const geminiResponse = data.candidates[0].content.parts[0].text;
 
-        this.recommendedLocations = geminiResponse.split(",");
+        // 假設 gemini 返回多個地點，以逗號分隔
+        this.recommendedLocations = geminiResponse.split(","); // 分隔多個地點
+        msg = this.recommendedLocations;
+        console.log(msg);
         this.responseMessage = "行程提交成功，已顯示推薦地點。";
       } catch (error) {
         console.error("Error submitting itinerary:", error);
         this.responseMessage = "提交時發生錯誤，請稍後再試。";
       }
+      
+      console.log("1")
+const openai = new OpenAI({ apiKey: 'API' , dangerouslyAllowBrowser: true});
+
+const thread = await openai.beta.threads.create();
+let mes;
+const message = await openai.beta.threads.messages.create(
+  thread.id,
+  {
+    role: "user",
+    content: msg[0] + ","+ msg[1]+ "," + msg[2]
+  }
+);
+console.log("2")
+let run = await openai.beta.threads.runs.createAndPoll(
+  thread.id,
+  { 
+    assistant_id: 'asst_8GkyxwRkgLuvSkUcvhkFIFKT',
+    instructions: "Please address the user as Jane Doe. The user has a premium account."
+  }
+);
+console.log("3")
+if (run.status === 'completed') {
+  const messages = await openai.beta.threads.messages.list(
+    run.thread_id
+  );
+  for (const message of messages.data.reverse()) {
+    console.log(`${message.role} > ${message.content[0].text.value}`);
+    this.mes = message.content[0].text.value;
+
+  }
+} else {
+  console.log(run.status);
+}
+      
     },
   },
+
+  methods_1: {
+//     async submitItinerary() {
+//       console.log("1")
+
+
+// const thread = await openai.beta.threads.create();
+// const message = await openai.beta.threads.messages.create(
+//   thread.id,
+//   {
+//     role: "user",
+//     content: msg[0] + ","+ msg[1]+ "," + msg[2]
+//   }
+// );
+// console.log("2")
+// let run = await openai.beta.threads.runs.createAndPoll(
+//   thread.id,
+//   { 
+//     assistant_id: 'asst_8GkyxwRkgLuvSkUcvhkFIFKT',
+//     instructions: "Please address the user as Jane Doe. The user has a premium account."
+//   }
+// );
+// console.log("3")
+// if (run.status === 'completed') {
+//   const messages = await openai.beta.threads.messages.list(
+//     run.thread_id
+//   );
+//   for (const message of messages.data.reverse()) {
+//     console.log(`${message.role} > ${message.content[0].text.value}`);
+
+//   }
+// } else {
+//   console.log(run.status);
+// }
+//       }
+    },
 };
 </script>
+
+
 
 <style scoped>
 body {
