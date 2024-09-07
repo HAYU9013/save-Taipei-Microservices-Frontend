@@ -17,6 +17,7 @@ import { RouterView } from 'vue-router';
         <router-link to="/data-detect">資料檢測</router-link>
         <router-link to="/vote">活動投票</router-link>
         <router-link to="/create-activity">增加活動與選項</router-link> <!-- 新增的按鈕 -->
+        <router-link to="/itinerary">推薦旅遊景點</router-link>
       </div>
     </nav>
     <div class="content">

@@ -19,6 +19,7 @@ import DataDetect from "../views/DataDetect.vue";
 import AutoFillForm from "../views/AutoFillForm.vue";
 import VotePage from "../views/VotePage.vue"; // 確保這行存在
 import CreateVoteActivity from '../views/CreateVoteActivity.vue';  // 新增這一行
+import ItineraryPage from "../views/ItineraryPage.vue";  // 新增這一行
 
 
 const router = createRouter({
@@ -93,6 +94,11 @@ const router = createRouter({
       path: '/create-activity',  // 新增活動的路徑
       name: 'CreateActivity',
       component: CreateVoteActivity,
+    },
+    {
+      path: "/itinerary",  // 新增行程頁面的路徑
+      name: "ItineraryPage",
+      component: ItineraryPage,
     },
     {
       path: '/coupon',
