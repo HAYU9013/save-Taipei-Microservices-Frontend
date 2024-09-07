@@ -4,6 +4,7 @@
         <div class="tabs">
             <button @click="activeTab = 0" :class="{ active: activeTab === 0 }">活動列表</button>
             <button @click="activeTab = 1" :class="{ active: activeTab === 1 }">活動投票</button>
+            <button @click="activeTab = 2" :class="{ active: activeTab === 2 }">AI導遊</button>
         </div>
 
         <!-- 活動列表頁籤 -->
@@ -95,7 +96,7 @@
                         </div>
                     </div>
                 </li>
-            </ul>       
+            </ul>
         </div>
 
         <!-- 活動投票頁籤 -->
@@ -113,6 +114,10 @@
                 <VoteOptions :options="activity.options" :showResults="true"
                     @vote="(optionId) => handleVote(activity.id, optionId)" />
             </div>
+        </div>
+
+        <div v-if="activeTab === 2" class="vote-page">
+
         </div>
     </div>
     <div class="floating-button" @click="handleFloatingButtonClick">+</div>
