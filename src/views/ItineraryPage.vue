@@ -37,7 +37,7 @@
 
 <script>
 import OpenAI from "openai";
-let kkk = "YXBwbGU="
+let kkk = "c2stcHJvai1jS2M0c3NFNkpPQWFycFN4QnFQYmxfMmtOdXBxbXJId05abUppdVRtdm84ZjJrR2ZONW1fX2hFOWdJVDNCbGJrRkpRekpTd2hGRkJuUGFqNVlHazBwd1BNdmdvb0lKeXQyMVd3cmZMNUR6aDU5VXV4VmxLRmNjZmdwZGNB"
 const decodedStr = atob(kkk);
 console.log(decodedStr)
 
@@ -103,7 +103,7 @@ export default {
       
       console.log("1")
 
-const openai = new OpenAI({apiKey: kkk,dangerouslyAllowBrowser: true});
+const openai = new OpenAI({apiKey: decodedStr,dangerouslyAllowBrowser: true});
 
 const thread = await openai.beta.threads.create();
 let mes;
