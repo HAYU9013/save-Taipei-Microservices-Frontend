@@ -25,6 +25,7 @@ const toggleMenu = () => {
           <router-link to="/data-detect" @click="toggleMenu">資料檢測</router-link>
           <router-link to="/vote" @click="toggleMenu">活動投票</router-link>
           <router-link to="/create-activity" @click="toggleMenu">增加活動與選項</router-link>
+          <router-link to="/itinerary" @click="toggleMenu">旅遊行程安排</router-link>
         </div>
       </div>
     </nav>
