@@ -17,18 +17,18 @@ export default {
         async modifyPdf(userid, formname) {
             try {
                 // Fetch the PDF template
-                const response = await fetch('http://localhost:8081/api/autofillform/' + formname);
+                const response = await fetch('https://taipei-microservices-initiative-haskson.onrender.com/api/autofillform/' + formname);
                 const arrayBuffer = await response.arrayBuffer();
 
                 // Fetch the user data
-                const userDataResponse = await fetch('http://localhost:8081/api/users/' + userid);
+                const userDataResponse = await fetch('https://taipei-microservices-initiative-haskson.onrender.com/api/users/' + userid);
                 const userData = await userDataResponse.json();
                 console.log(userData);
                 let a = "name";
                 console.log(userData[a]);
 
 
-                const pdfDetailsOringin = await fetch('http://localhost:8081/api/autofillform/detail/' + formname);
+                const pdfDetailsOringin = await fetch('https://taipei-microservices-initiative-haskson.onrender.com/api/autofillform/detail/' + formname);
                 const pdfDetailsfull = await pdfDetailsOringin.json();
                 const pdfDetailsText = pdfDetailsfull.detail;
                 const pdfDetails = JSON.parse(pdfDetailsText);
@@ -66,7 +66,7 @@ export default {
                             color: rgb(0, 0, 0),
                         });
                     } else if (detail.datatype == "image") {
-                        const imgResponse = await fetch('http://localhost:8081/api/users/image/' + userData[detail.data]);
+                        const imgResponse = await fetch('https://taipei-microservices-initiative-haskson.onrender.com/api/users/image/' + userData[detail.data]);
                         const imageBytes = await imgResponse.arrayBuffer();
                         const embeddedImage = await pdfDoc.embedPng(imageBytes);
                         firstPage.drawImage(embeddedImage, {

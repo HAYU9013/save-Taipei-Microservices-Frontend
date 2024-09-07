@@ -40,7 +40,7 @@ export default {
   },
   methods: {
     fetchActivities() {
-      axios.get('http://localhost:8081/api/vote/activities')
+      axios.get('https://taipei-microservices-initiative-haskson.onrender.com/api/vote/activities')
         .then(response => {
           this.activities = response.data;
         })
@@ -50,7 +50,7 @@ export default {
     },
 
     handleVote(activityId, optionId) {
-      axios.post('http://localhost:8081/api/vote/submit', { option_id: optionId })
+      axios.post('https://taipei-microservices-initiative-haskson.onrender.com/api/vote/submit', { option_id: optionId })
         .then(() => {
           // 投票成功後，將活動 ID 暫時保存在記憶體中
           this.votedActivities[activityId] = true;

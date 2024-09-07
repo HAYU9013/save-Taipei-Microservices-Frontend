@@ -37,7 +37,7 @@ export default {
     },
     methods: {
         fetchActivities() {
-            fetch('http://localhost:8081/api/activitys/all')
+            fetch('https://taipei-microservices-initiative-haskson.onrender.com/api/activitys/all')
                 .then(response => response.json())
                 .then(data => {
                     this.activities = data;

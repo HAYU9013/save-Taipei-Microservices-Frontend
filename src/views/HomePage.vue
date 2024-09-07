@@ -55,7 +55,7 @@ export default {
             let formData = new FormData();
             formData.append('image', this.form.image);
 
-            fetch('http://localhost:8081/api/upload/image', {
+            fetch('https://taipei-microservices-initiative-haskson.onrender.com/api/upload/image', {
                 method: 'POST',
                 body: formData,
             })
@@ -90,7 +90,7 @@ export default {
                 image_url: imageUrl
             };
 
-            fetch('http://localhost:8081/api/activitys/', {
+            fetch('https://taipei-microservices-initiative-haskson.onrender.com/api/activitys/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

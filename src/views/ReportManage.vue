@@ -30,7 +30,7 @@ export default {
     },
     methods: {
         fetchReports() {
-            fetch('http://localhost:8081/api/report/all')
+            fetch('https://taipei-microservices-initiative-haskson.onrender.com/api/report/all')
                 .then(response => response.json())
                 .then(data => {
                     this.reports = data;
@@ -40,7 +40,7 @@ export default {
                 });
         },
         deleteReport(id) {
-            fetch(`http://localhost:8081/api/report/${id}`, {
+            fetch(`https://taipei-microservices-initiative-haskson.onrender.com/api/report/${id}`, {
                 method: 'DELETE',
             })
                 .then(response => {

@@ -55,7 +55,7 @@ export default {
                 description: this.form.description,
                 time: currnetTime.toISOString()
             };
-            fetch('http://localhost:8081/api/report/', {
+            fetch('https://taipei-microservices-initiative-haskson.onrender.com/api/report/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
