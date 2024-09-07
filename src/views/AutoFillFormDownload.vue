@@ -11,6 +11,7 @@
 import {PDFDocument, rgb} from 'pdf-lib';
 import fontkit from '@pdf-lib/fontkit';
 const BaseURL = 'https://taipei-microservices-initiative-hayu.onrender.com/api/';
+//const BaseURL = 'http://localhost:8081/api/';
 export default {
     methods: {
         async modifyPdf(userid, formname) {
@@ -51,7 +52,7 @@ export default {
 
                 // Get the first page of the document
                 const pages = pdfDoc.getPages();
-                const firstPage = pages[0];
+                // const firstPage = pages[0];
 
                 console.log(pdfDetails.objects.length);
 
@@ -61,18 +62,18 @@ export default {
 
                     if (detail.datatype == "text") {
                         console.log("in text area");
-                        firstPage.drawText(userData[detail.data], {
+                        pages[detail.page].drawText(userData[detail.data], {
                             x: detail.x,
                             y: detail.y,
                             size: detail.size,
                             font: customFont,
-                            color: rgb(0, 0, 0),
+                            color: rgb(0, 0, 0+1),
                         });
                     } else if (detail.datatype == "image") {
                         const imgResponse = await fetch(BaseURL + 'users/image/' + userData[detail.data]);
                         const imageBytes = await imgResponse.arrayBuffer();
                         const embeddedImage = await pdfDoc.embedPng(imageBytes);
-                        firstPage.drawImage(embeddedImage, {
+                        pages[detail.page].drawImage(embeddedImage, {
                             x: detail.x,
                             y: detail.y,
                             width: detail.width,
