@@ -16,10 +16,12 @@ import NoiceDetect from "../views//NoiceDetect.vue";
 import ReportSubmit from "../views/ReportSubmit.vue";
 import ReportManage from "../views/ReportManage.vue";
 import DataDetect from "../views/DataDetect.vue";
-import AutoFillForm from "../views/AutoFillForm.vue";
 import VotePage from "../views/VotePage.vue"; // 確保這行存在
 import CreateVoteActivity from '../views/CreateVoteActivity.vue';  // 新增這一行
 import ItineraryPage from "../views/ItineraryPage.vue";  // 新增這一行
+import AutoFillFormSelect from "../views/AutoFillFormSelect.vue";
+import AutoFillFormFill from "../views/AutoFillFormFill.vue";
+import AutoFillFormDownload from "../views/AutoFillFormDownload.vue";
 
 
 const router = createRouter({
@@ -62,8 +64,18 @@ const router = createRouter({
     },
     {
       path: "/auto-fill-form",
+      name: "SampleForm",
+      component: AutoFillFormSelect,
+    },
+    {
+      path: "/auto-fill-form/:formType",
       name: "auto-fill-form",
-      component: AutoFillForm,
+      component: AutoFillFormFill,
+    },
+    {
+      path: "/autofillform/download",
+      name: "auto-fill-form-download",
+      component: AutoFillFormDownload,
     },
     {
       path: "/detect",
