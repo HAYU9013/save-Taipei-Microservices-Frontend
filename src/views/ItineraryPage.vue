@@ -1,24 +1,14 @@
 <template>
-  <div class="container">
+  <div>
     <h1 class="title">旅遊行程安排</h1>
-    <div class="form-container">
-      <form @submit.prevent="submitItinerary">
-        <div class="input-group">
-          <label for="location" class="input-label">行程地點:</label>
-          <input id="location" v-model="form.location" placeholder="輸入地點" required class="input-field"/>
-        </div>
+    <form @submit.prevent="submitItinerary">
+      <input type="text" v-model="form.location" placeholder="輸入地點" required />
+      <input type="text" v-model="form.description" placeholder="輸入行程描述" required />
+      <button type="submit">送出行程</button>
+    </form>
 
-        <div class="input-group">
-          <label for="description" class="input-label">行程描述:</label>
-          <textarea id="description" v-model="form.description" placeholder="描述你的行程" class="textarea-field"></textarea>
-        </div>
-
-        <button type="submit" class="submit-button">提交行程</button>
-      </form>
-    </div>
-
-    <!-- 顯示推薦的 Google Maps -->
     <div v-if="recommendedLocation" class="map-container">
+      <!-- 使用Google Maps iframe來顯示 gemini 推薦的地點 -->
       <iframe
         width="100%"
         height="300"
@@ -33,8 +23,7 @@
       ></iframe>
     </div>
 
-    <div v-if="responseMessage" class="response-container">
-      <h2>回應</h2>
+    <div v-if="responseMessage">
       <p>{{ responseMessage }}</p>
     </div>
   </div>
@@ -48,34 +37,50 @@ export default {
         location: "",
         description: "",
       },
-      recommendedLocation: null, // 存儲 gemini 推薦的地點
-      responseMessage: null, // 儲存後端回應
+      recommendedLocation: null, // 儲存 gemini 推薦的地點
+      responseMessage: null, // 儲存回應訊息
     };
   },
   methods: {
     async submitItinerary() {
-      try {
-        // 發送 POST 請求至後端 API
-        const response = await fetch("http://localhost:8081/api/itinerary", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(this.form),
-        });
+      // 構建發送到 gemini 的資料，包含地點和行程描述
+      const input = `地點: ${this.form.location}, 行程描述: ${this.form.description}`;
 
-        // 檢查後端是否回應成功
+      try {
+        const response = await fetch(
+          "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyAsrQ5ObzfFJfGjwAIaMcRxp4gW-PMiELg", // 請替換為正確的 API 金鑰
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              contents: [
+                {
+                  parts: [
+                    {
+                      text: input,
+                    },
+                  ],
+                },
+              ],
+            }),
+          }
+        );
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        // 解析後端的 JSON 回應
         const data = await response.json();
-        this.responseMessage = data.message || "行程提交成功";
-        this.recommendedLocation = data.recommendedLocation; // 使用 gemini 推薦的地點
+        const geminiResponse = data.candidates[0].content.parts[0].text;
+
+        // 根據 gemini 的回應來設置推薦的地點
+        this.recommendedLocation = geminiResponse; // 假設 gemini 返回的是推薦的地點
+        this.responseMessage = "行程提交成功，已顯示推薦地點。";
       } catch (error) {
         console.error("Error submitting itinerary:", error);
-        this.responseMessage = "提交失敗，請檢查後端 API 路徑或伺服器狀態。";
+        this.responseMessage = "提交時發生錯誤，請稍後再試。";
       }
     },
   },
@@ -83,89 +88,57 @@ export default {
 </script>
 
 <style scoped>
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f9;
+  color: #333;
 }
 
 .title {
   text-align: center;
-  font-size: 2.5rem;
-  color: #2c3e50;
-  margin-bottom: 20px;
+  padding: 1em;
+  background-color: #6200ea;
+  color: #fff;
+  font-size: 2em;
 }
 
-.form-container {
-  margin-bottom: 30px;
+form {
+  display: flex;
+  justify-content: center;
+  margin: 1em;
+  gap: 0.5em;
 }
 
-.input-group {
-  margin-bottom: 20px;
+input {
+  padding: 0.5em;
+  border: 1px solid #ccc;
+  border-radius: 0.5em;
+  font-size: 1em;
 }
 
-.input-label {
-  display: block;
-  font-size: 1.1rem;
-  color: #34495e;
-  margin-bottom: 8px;
-}
-
-.input-field, .textarea-field {
-  width: 100%;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #bdc3c7;
-  font-size: 1rem;
-  transition: border-color 0.3s ease;
-}
-
-.input-field:focus, .textarea-field:focus {
-  border-color: #2980b9;
-}
-
-.textarea-field {
-  height: 120px;
-  resize: none;
-}
-
-.submit-button {
-  display: inline-block;
-  width: 100%;
-  padding: 12px;
-  background-color: #3498db;
-  color: white;
+button {
+  padding: 0.5em 1em;
   border: none;
-  border-radius: 6px;
-  font-size: 1.2rem;
+  border-radius: 0.5em;
+  background-color: #6200ea;
+  color: #fff;
   cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
-.submit-button:hover {
-  background-color: #2980b9;
+button:hover {
+  background-color: #3700b3;
 }
 
 .map-container {
-  margin-top: 30px;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  margin: 1em auto;
+  width: 80%;
+  max-width: 600px;
 }
 
-.response-container {
-  margin-top: 20px;
-  background-color: #ecf0f1;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.response-container h2 {
-  margin-top: 0;
-  color: #2c3e50;
+p {
+  text-align: center;
+  color: #6200ea;
 }
 </style>
