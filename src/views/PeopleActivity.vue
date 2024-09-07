@@ -217,7 +217,7 @@ export default {
 
                 // If the location is "大安區", override the locations with fixed tourist spots
                 if (this.form.location.trim() === "大安區") {
-                    this.recommendedLocations = ["大安森林公園", "福州山公園", "永康街"];
+                    this.recommendedLocations = ["大安森林公園 大安區", "福州山公園 大安區", "永康街 大安區"];
                 } else {
                     this.recommendedLocations = recommendedLocations;
                 }
