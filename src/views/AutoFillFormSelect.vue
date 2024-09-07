@@ -2,7 +2,7 @@
     <div class="auto-fill-form">
         <div class="button-container">
             <button class="button" @click="goToForm('Identity Card Application Form')">Identity Card Application Form</button>
-            <button class="button" @click="goToForm('Travel Form')">Travel Form</button>
+            <button class="button" @click="goToForm('travelform')">Travel Form</button>
             <button class="button" @click="goToForm('simpleform')">simpleform</button>
         </div>
     </div>

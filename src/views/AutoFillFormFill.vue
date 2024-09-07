@@ -33,7 +33,7 @@
         formDetail: {},
         userData: {},
         userimg: null,
-        userid: 5,
+        userid: this.$route.query.userid | 1,
       };
     },
     created() {
@@ -42,6 +42,7 @@
     },
     watch: {
       '$route.params.formType': 'loadFormData'
+
     },
     methods: {
         onFileChange(e) {
