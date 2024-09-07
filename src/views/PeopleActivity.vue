@@ -452,4 +452,14 @@ input:focus {
     color: #333;
     line-height: 1.6em;
 }
+.switch-btn {
+    background-color: #00bcd4;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
 </style>
