@@ -7,17 +7,21 @@
       <button type="submit">送出行程</button>
     </form>
 
-    <div v-if="recommendedLocation" class="map-container">
-      <!-- 使用Google Maps iframe來顯示 gemini 推薦的地點 -->
-      <iframe
-        width="100%"
-        height="300"
-        frameborder="0"
-        scrolling="no"
-        marginheight="0"
-        marginwidth="0"
-        :src="'https://maps.google.com/maps?width=100%25&amp;height=300&amp;hl=zh-TW&amp;q=' + encodeURIComponent(recommendedLocation) + '&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed&disableDefaultUI=true&zoomControl=false&mapTypeControl=false&scaleControl=false&streetViewControl=false'"
-        allowfullscreen aria-hidden="false" tabindex="0"></iframe>
+    <div v-if="recommendedLocations.length > 0" class="map-container">
+      <div v-for="(location, index) in recommendedLocations" :key="index" class="location-item">
+        <iframe
+          width="100%"
+          height="300"
+          frameborder="0"
+          scrolling="no"
+          marginheight="0"
+          marginwidth="0"
+          :src="'https://maps.google.com/maps?width=100%25&amp;height=300&amp;hl=zh-TW&amp;q=' + encodeURIComponent(location) + '+(My%20Location)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed&markers=color:red%7Clabel:L%7C' + encodeURIComponent(location)"
+          allowfullscreen
+          aria-hidden="false"
+          tabindex="0"
+        ></iframe>
+      </div>
     </div>
 
     <div v-if="responseMessage">
@@ -34,18 +38,17 @@ export default {
         location: "",
         description: "",
       },
-      recommendedLocation: null, // 儲存 gemini 推薦的地點
+      recommendedLocations: [], // 存儲 gemini 推薦的多個地點
       responseMessage: null, // 儲存回應訊息
     };
   },
   methods: {
     async submitItinerary() {
-      // 構建發送到 gemini 的資料，包含地點和行程描述
-      const input = `地點: ${this.form.location}, 行程描述: ${this.form.description}`;
+      const input = `地點: ${this.form.location}, 行程描述: ${this.form.description}，請根據這些資訊返回幾個旅遊地點，並以逗號分隔。例如：地點1, 地點2, 地點3`;
 
       try {
         const response = await fetch(
-          "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyAsrQ5ObzfFJfGjwAIaMcRxp4gW-PMiELg", // 請替換為正確的 API 金鑰
+          "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyAsrQ5ObzfFJfGjwAIaMcRxp4gW-PMiELg",
           {
             method: "POST",
             headers: {
@@ -72,8 +75,7 @@ export default {
         const data = await response.json();
         const geminiResponse = data.candidates[0].content.parts[0].text;
 
-        // 根據 gemini 的回應來設置推薦的地點
-        this.recommendedLocation = geminiResponse; // 假設 gemini 返回的是推薦的地點
+        this.recommendedLocations = geminiResponse.split(",");
         this.responseMessage = "行程提交成功，已顯示推薦地點。";
       } catch (error) {
         console.error("Error submitting itinerary:", error);
@@ -132,6 +134,10 @@ button:hover {
   margin: 1em auto;
   width: 80%;
   max-width: 600px;
+}
+
+.location-item {
+  margin-bottom: 20px;
 }
 
 p {
