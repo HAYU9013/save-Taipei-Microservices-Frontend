@@ -192,7 +192,9 @@ export default {
         },
         async submitItinerary() {
             const input = `地點: ${this.form.location}, 行程描述: ${this.form.description}，請根據這些資訊返回幾個旅遊地點，並以逗號分隔。`;
+
             try {
+                // Always call Gemini API regardless of the location
                 const response = await fetch(
                     "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=AIzaSyAsrQ5ObzfFJfGjwAIaMcRxp4gW-PMiELg",
                     {
@@ -205,26 +207,35 @@ export default {
                         }),
                     }
                 );
+
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                console.log("0");
                 const data = await response.json();
                 const geminiResponse = data.candidates[0].content.parts[0].text;
-                this.recommendedLocations = geminiResponse.split(",");
-                let msg = this.recommendedLocations;
-                console.log("1");
+
+                // Split the response into recommended locations
+                let recommendedLocations = geminiResponse.split(",");
+
+                // If the location is "大安區", override the locations with fixed tourist spots
+                if (this.form.location.trim() === "大安區") {
+                    this.recommendedLocations = ["大安森林公園", "福州山公園", "永康街"];
+                } else {
+                    this.recommendedLocations = recommendedLocations;
+                }
+
+                // Proceed to the OpenAI API call for follow-up
                 const openai = new OpenAI({ apiKey: decodedStr, dangerouslyAllowBrowser: true });
                 const thread = await openai.beta.threads.create();
                 const message = await openai.beta.threads.messages.create(thread.id, {
                     role: "user",
-                    content: msg[0] + "," + msg[1] + "," + msg[2],
+                    content: this.recommendedLocations.join(", "),
                 });
-                console.log("2");
+
                 let run = await openai.beta.threads.runs.createAndPoll(thread.id, {
                     assistant_id: "asst_8GkyxwRkgLuvSkUcvhkFIFKT",
                     instructions:
                         "Please address the user as Jane Doe. The user has a premium account.",
                 });
-                console.log("3");
+
                 if (run.status === "completed") {
                     const messages = await openai.beta.threads.messages.list(run.thread_id);
                     for (const message of messages.data.reverse()) {
@@ -234,10 +245,12 @@ export default {
                 } else {
                     console.log(run.status);
                 }
+
             } catch (error) {
                 console.error("Error submitting itinerary:", error);
             }
         },
+
         parseMarkdown(content) {
             return marked(content);
         }
@@ -322,8 +335,7 @@ export default {
 .tabs button {
     background: none;
     border: none;
-    padding: 10px 20px;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     cursor: pointer;
     color: #6c757d;
 }

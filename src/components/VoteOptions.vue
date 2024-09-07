@@ -73,7 +73,7 @@ export default {
 }
 
 .vote-bar:disabled {
-  background-color: #a9a9a9;
+  background-color: #0097a7;
   /* 禁用狀態按鈕顏色 */
   cursor: not-allowed;
 }
@@ -93,7 +93,7 @@ export default {
 
 .progress-bar-container {
   flex-grow: 1;
-  background-color: #e0e0e0;
+  background-color: #00bcd4;
   border-radius: 30px;
   height: 50px;
   position: relative;
