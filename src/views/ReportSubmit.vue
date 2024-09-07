@@ -1,6 +1,6 @@
 <template>
     <div class="report-submit">
-        <img src="@/assets/bloodtrail.png" alt="Report" class="report-logo" @click="hadleClick" />
+        <img src="@/assets/report_list.png" alt="Report" class="report-logo" @click="hadleClick" />
         <h1>提交建議或問題</h1>
         <form @submit.prevent="submitForm">
             <div class="form-group">
