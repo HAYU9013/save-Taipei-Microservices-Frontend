@@ -1,8 +1,8 @@
 <template>
-    <div class="activities-list">
-        <h1>活動列表</h1>
+    <div class="follow-list">
+        <h1>追蹤列表</h1>
         <ul>
-            <li v-for="activity in activities" :key="activity.id" class="activity-item">
+            <li v-for="activity in activities" :key="activity.title" class="activity-item">
                 <div class="activity-header">
                     <h3>{{ activity.title }}</h3>
                     <p class="activity-time">{{ new Date(activity.time).toLocaleString() }}</p>
@@ -19,7 +19,6 @@
                         :src="'https://maps.google.com/maps?width=100%25&amp;height=300&amp;hl=zh-TW&amp;q=' + encodeURIComponent(activity.location) + '&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed'">
                     </iframe>
                 </div>
-                <button class="follow-btn" @click="followActivity(activity.title)">追蹤</button>
             </li>
         </ul>
     </div>
@@ -34,38 +33,20 @@ export default {
         };
     },
     created() {
-        this.fetchActivities();
+        this.fetchUserFollowing();
     },
     methods: {
-        fetchActivities() {
-            fetch('https://taipei-microservices-initiative-haskson.onrender.com/api/activitys/all ')
-                .then(response => response.json())
-                .then(data => {
-                    this.activities = data;
-                })
-                .catch(error => {
-                    console.error('Error fetching activities:', error);
-                });
-        },
-        followActivity(title) {
-            fetch(`https://taipei-microservices-initiative-haskson.onrender.com/api/users/follow/${title}`, {
-                method: 'POST',
+        fetchUserFollowing() {
+            fetch('https://taipei-microservices-initiative-haskson.onrender.com/api/users/follow/1')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                this.activities = data;
             })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Activity followed:', data);
-                })
-                .catch(error => {
-                    console.error('Error following activity:', error);
-                    alert('追蹤活動過程中出現錯誤！');
-                });
+            .catch(error => {
+                console.error('Error fetching follows:', error);
+            });
         }
-
     }
 }
 
@@ -74,7 +55,7 @@ export default {
 </script>
 
 <style scoped>
-.activities-list {
+.follow-list {
     max-width: 900px;
     margin: 40px auto;
     padding: 30px;
@@ -83,7 +64,7 @@ export default {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
-.activities-list h1 {
+.follow-list h1 {
     text-align: center;
     font-size: 2rem;
     color: #333;
@@ -91,7 +72,7 @@ export default {
     font-weight: 600;
 }
 
-.activities-list ul {
+.follow-list ul {
     list-style-type: none;
     padding: 0;
 }

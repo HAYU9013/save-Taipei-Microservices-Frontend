@@ -44,7 +44,7 @@ export default {
         options: this.options.map(option => ({ label: option.label }))
       };
 
-      fetch('http://localhost:8081/api/vote/create', {
+      fetch('https://taipei-microservices-initiative-haskson.onrender.com/api/vote/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

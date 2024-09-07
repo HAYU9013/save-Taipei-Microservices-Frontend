@@ -12,6 +12,7 @@ import CouponDetail from '../views/CouponDetail.vue';
 
 import HomePage from '../views/HomePage.vue';
 import ActivitiesList from "../views/ActivitiesList.vue";
+import UserFollowList from '../views/UserFollowList.vue';
 import NoiceDetect from "../views//NoiceDetect.vue";
 import ReportSubmit from "../views/ReportSubmit.vue";
 import ReportManage from "../views/ReportManage.vue";
@@ -108,6 +109,11 @@ const router = createRouter({
       path: '/create-activity',  // 新增活動的路徑
       name: 'CreateActivity',
       component: CreateVoteActivity,
+    },
+    {
+      path: '/user-follow-list',  // 新增追蹤清單的路徑
+      name: 'UserFollowList',
+      component: UserFollowList,
     },
     {
       path: "/itinerary",  // 新增行程頁面的路徑
