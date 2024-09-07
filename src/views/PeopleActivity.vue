@@ -123,7 +123,7 @@ export default {
     methods: {
         handleFloatingButtonClick() {
             if (this.activeTab === 0) {
-                this.$router.push('/');
+                this.$router.push('/home');
             } else if (this.activeTab === 1) {
                 this.$router.push('/create-activity');
             }
