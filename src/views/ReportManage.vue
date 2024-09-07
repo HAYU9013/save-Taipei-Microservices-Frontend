@@ -2,7 +2,7 @@
     <div class="report-manage">
         <h1>報告列表</h1>
         <div class="report-list">
-            
+
             <li v-for="report in reports" :key="report.id" class="report-item">
                 <span class="report-item-header">
                     <h3>{{ report.title }}</h3>
@@ -63,7 +63,7 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
 .report-manage {
     max-width: 900px;
     margin: 40px auto;
@@ -78,10 +78,12 @@ export default {
     font-size: 2rem;
     color: #333;
     margin-bottom: 30px;
+    font-weight: 600;
 }
 
 .report-list {
-    list-style-type: none; /* 去除列表點 */
+    list-style-type: none;
+    /* 去除列表點 */
     padding: 0;
     margin: 0;
 }
@@ -90,16 +92,20 @@ export default {
     background: #f9f9f9;
     border-radius: 12px;
     padding: 20px;
-    margin-bottom: 30px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease box-shadow 0.3s ease;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.report-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
 .report-item-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
+    align-items: flex-start;
 }
 
 .report-type {
@@ -110,56 +116,56 @@ export default {
 
 .report-description {
     font-size: 1rem;
-    margin-bottom: 10px;
+    margin: 15px 0;
+    color: #555;
 }
 
 .report-time {
     font-size: 0.8rem;
     color: #999;
+    margin-bottom: 10px;
+}
+
+.report-id {
+    font-size: 0.8rem;
+    color: #888;
+    margin-top: 5px;
 }
 
 .delete-btn {
-    align-self: flex-end;
-    padding: 5px 10px;
+    padding: 8px 15px;
     background-color: #ff4d4f;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .delete-btn:hover {
     background-color: #d9363e;
-}
-
-.report-type,
-.report-description,
-.report-time {
-    margin: 5px 0; /* 確保各部分之間有適當的間距 */
-}
-
-.submit-btn {
-    display: block;
-    width: 100%;
-    padding: 15px;
-    background-color: #0056b3;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 1.25rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.submit-btn:hover {
-    background-color: #004494;
     transform: translateY(-2px);
 }
 
-.submit-btn:active {
-    background-color: #003366;
+.delete-btn:active {
+    background-color: #b32628;
     transform: translateY(0);
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .report-manage {
+        padding: 20px;
+    }
+
+    .report-item {
+        padding: 15px;
+    }
+
+    .delete-btn {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+    }
 }
 </style>

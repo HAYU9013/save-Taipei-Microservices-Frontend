@@ -17,10 +17,7 @@
         marginheight="0"
         marginwidth="0"
         :src="'https://maps.google.com/maps?width=100%25&amp;height=300&amp;hl=zh-TW&amp;q=' + encodeURIComponent(recommendedLocation) + '&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed&disableDefaultUI=true&zoomControl=false&mapTypeControl=false&scaleControl=false&streetViewControl=false'"
-        allowfullscreen
-        aria-hidden="false"
-        tabindex="0"
-      ></iframe>
+        allowfullscreen aria-hidden="false" tabindex="0"></iframe>
     </div>
 
     <div v-if="responseMessage">

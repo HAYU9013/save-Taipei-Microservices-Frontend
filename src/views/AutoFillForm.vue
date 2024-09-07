@@ -123,18 +123,44 @@ export default {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    /* Adjust as needed */
+    background-color: #f8f9fa;
+    padding: 20px;
 }
 
 .button-container {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    /* Adjust spacing between buttons as needed */
+    gap: 15px;
+    align-items: center;
 }
 
 .button {
-    padding: 10px 20px;
-    font-size: 16px;
+    padding: 15px 30px;
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.button:hover {
+    background-color: #0056b3;
+    transform: translateY(-3px);
+}
+
+.button:active {
+    background-color: #003f7f;
+    transform: translateY(0);
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .button {
+        padding: 12px 25px;
+        font-size: 1rem;
+    }
 }
 </style>
