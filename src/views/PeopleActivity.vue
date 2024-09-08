@@ -206,12 +206,13 @@ export default {
     },
     methods: {
         sendMessageToFlutter() {
-            const messageData = {
-                name: 'launch_map',
-                data: 'https://maps.app.goo.gl/UvE8zXufc1zUs8qL7'
-            };
+            // const messageData = {
+            //     name: 'launch_map',
+            //     data: 'https://maps.app.goo.gl/UvE8zXufc1zUs8qL7'
+            // };
             // this.addLog(`即將發送訊息到 Flutter: ${JSON.stringify(messageData)}`);
-            useConnectionMessage('open_link', messageData.data); // 發送資料到 Flutter
+            // useConnectionMessage('launch_map', messageData.data); // 發送資料到 Flutter
+            useConnectionMessage('launch_map', 'https://maps.app.goo.gl/UvE8zXufc1zUs8qL7'); // 發送資料到 Flutter
             // this.addLog('訊息已發送至 Flutter');
         },
         handleFloatingButtonClick() {
