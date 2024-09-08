@@ -32,22 +32,22 @@
                         <!-- 地點與時間 -->
                         <div class="activity-details">
                             <div class="activity-location">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                    <path
-                                        d="M12 2C8.13401 2 5 5.13401 5 9C5 13.3137 12 22 12 22C12 22 19 13.3137 19 9C19 5.13401 15.866 2 12 2ZM12 11.5C11.1716 11.5 10.5 10.8284 10.5 10C10.5 9.17157 11.1716 8.5 12 8.5C12.8284 8.5 13.5 9.17157 13.5 10C13.5 10.8284 12.8284 11.5 12 11.5Z" />
-                                </svg>
-                                <span>{{ activity.location }}</span>
+
+                                <span class="ff"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path
+                                            d="M12 2C8.13401 2 5 5.13401 5 9C5 13.3137 12 22 12 22C12 22 19 13.3137 19 9C19 5.13401 15.866 2 12 2ZM12 11.5C11.1716 11.5 10.5 10.8284 10.5 10C10.5 9.17157 11.1716 8.5 12 8.5C12.8284 8.5 13.5 9.17157 13.5 10C13.5 10.8284 12.8284 11.5 12 11.5Z" />
+                                    </svg>{{ activity.location }}</span>
                             </div>
                             <div class="activity-time">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <polyline points="12 6 12 12 16 14"></polyline>
-                                </svg>
-                                <span>{{ new Date(activity.time).toLocaleString() }}</span>
+
+                                <span class="ff"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <polyline points="12 6 12 12 16 14"></polyline>
+                                    </svg>{{ new Date(activity.time).toLocaleString() }}</span>
                             </div>
                             <button class="join-button" @click="handleFollow(activity.title)">參與</button>
                         </div>
@@ -99,8 +99,13 @@
                     </div>
                 </li>
             </ul>
+            <button class="l-map" @click="sendMessageToFlutter"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+                    height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                        d="M12 2C8.13401 2 5 5.13401 5 9C5 13.3137 12 22 12 22C12 22 19 13.3137 19 9C19 5.13401 15.866 2 12 2ZM12 11.5C11.1716 11.5 10.5 10.8284 10.5 10C10.5 9.17157 11.1716 8.5 12 8.5C12.8284 8.5 13.5 9.17157 13.5 10C13.5 10.8284 12.8284 11.5 12 11.5Z" />
+                </svg>開啟GoogleMap</button>
         </div>
-        <button class="l-map" @click="sendMessageToFlutter">開啟地圖</button>
         <!-- 活動投票頁籤 -->
         <div v-if="activeTab === 1" class="vote-page">
             <div v-if="activities2.length === 0" class="empty-message">目前沒有可供投票的活動。</div>
@@ -155,6 +160,13 @@
                 <div class="response-card-header">AI 回應結果</div>
                 <div class="response-card-content" v-html="parseMarkdown(mes)"></div>
             </div>
+
+            <button class="l-map" @click="sendMessageToFlutter"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+                    height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                        d="M12 2C8.13401 2 5 5.13401 5 9C5 13.3137 12 22 12 22C12 22 19 13.3137 19 9C19 5.13401 15.866 2 12 2ZM12 11.5C11.1716 11.5 10.5 10.8284 10.5 10C10.5 9.17157 11.1716 8.5 12 8.5C12.8284 8.5 13.5 9.17157 13.5 10C13.5 10.8284 12.8284 11.5 12 11.5Z" />
+                </svg>開啟GoogleMap</button>
         </div>
     </div>
 
@@ -375,22 +387,23 @@ export default {
     --background-color: #f8f9fa;
 }
 
+.ff {
+    display: flex;
+    padding: 10px;
+    gap: 15px;
+}
+
 .l-map {
-    position: fixed;
-    right: 20px;
-    bottom: 100px;
-    width: 100px;
-    height: 40px;
     background-color: #00bcd4;
-    border-radius: 37%;
     color: white;
-    font-size: 1.3rem;
-    text-align: center;
-    line-height: 40px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 1rem;
     cursor: pointer;
-    transition: transform 0.3s ease, background-color 0.3s ease;
-    animation: float 3s ease-in-out infinite;
+    transition: background-color 0.3s ease;
+    display: flex;
+    margin-left: 20px;
 }
 
 .activities-list {
@@ -430,6 +443,7 @@ export default {
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    text-align: right;
 }
 
 .join-button:hover {
