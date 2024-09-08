@@ -100,7 +100,7 @@
                 </li>
             </ul>
         </div>
-
+        <button class="l-map" @click="sendMessageToFlutter">開啟地圖</button>
         <!-- 活動投票頁籤 -->
         <div v-if="activeTab === 1" class="vote-page">
             <div v-if="activities2.length === 0" class="empty-message">目前沒有可供投票的活動。</div>
@@ -207,8 +207,8 @@ export default {
     methods: {
         sendMessageToFlutter() {
             const messageData = {
-                name: 'open_link',
-                data: 'https://taipei-microservices-initiative-hayu.onrender.com/api/autofillform/showpdf/travelform_%E9%98%BF%E5%9B%89%E5%93%88.pdf'
+                name: 'launch_map',
+                data: 'https://maps.app.goo.gl/UvE8zXufc1zUs8qL7'
             };
             // this.addLog(`即將發送訊息到 Flutter: ${JSON.stringify(messageData)}`);
             useConnectionMessage('open_link', messageData.data); // 發送資料到 Flutter
@@ -372,6 +372,24 @@ export default {
     --primary-color: #00bcd4;
     --secondary-color: #6c757d;
     --background-color: #f8f9fa;
+}
+
+.l-map {
+    position: fixed;
+    right: 20px;
+    bottom: 100px;
+    width: 100px;
+    height: 40px;
+    background-color: #00bcd4;
+    border-radius: 50%;
+    color: white;
+    font-size: 2rem;
+    text-align: center;
+    line-height: 60px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    animation: float 3s ease-in-out infinite;
 }
 
 .activities-list {
