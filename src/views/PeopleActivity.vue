@@ -105,6 +105,13 @@
                     <path
                         d="M12 2C8.13401 2 5 5.13401 5 9C5 13.3137 12 22 12 22C12 22 19 13.3137 19 9C19 5.13401 15.866 2 12 2ZM12 11.5C11.1716 11.5 10.5 10.8284 10.5 10C10.5 9.17157 11.1716 8.5 12 8.5C12.8284 8.5 13.5 9.17157 13.5 10C13.5 10.8284 12.8284 11.5 12 11.5Z" />
                 </svg>開啟GoogleMap</button>
+
+            <button class="l-map" @click="sendMessageToFlutter2"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+                    height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                        d="M12 2C8.13401 2 5 5.13401 5 9C5 13.3137 12 22 12 22C12 22 19 13.3137 19 9C19 5.13401 15.866 2 12 2ZM12 11.5C11.1716 11.5 10.5 10.8284 10.5 10C10.5 9.17157 11.1716 8.5 12 8.5C12.8284 8.5 13.5 9.17157 13.5 10C13.5 10.8284 12.8284 11.5 12 11.5Z" />
+                </svg>下載url</button>
         </div>
         <!-- 活動投票頁籤 -->
         <div v-if="activeTab === 1" class="vote-page">
@@ -225,6 +232,16 @@ export default {
             // this.addLog(`即將發送訊息到 Flutter: ${JSON.stringify(messageData)}`);
             // useConnectionMessage('launch_map', messageData.data); // 發送資料到 Flutter
             useConnectionMessage('launch_map', 'https://maps.app.goo.gl/UvE8zXufc1zUs8qL7'); // 發送資料到 Flutter
+            // this.addLog('訊息已發送至 Flutter');
+        },
+        sendMessageToFlutter2() {
+            // const messageData = {
+            //     name: 'launch_map',
+            //     data: 'https://maps.app.goo.gl/UvE8zXufc1zUs8qL7'
+            // };
+            // this.addLog(`即將發送訊息到 Flutter: ${JSON.stringify(messageData)}`);
+            // useConnectionMessage('launch_map', messageData.data); // 發送資料到 Flutter
+            useConnectionMessage('open_link', 'https://taipei-microservices-initiative-hayu.onrender.com/api/autofillform/showpdf/travelform_%E9%98%BF%E5%9B%89%E5%93%88.pdf'); // 發送資料到 Flutter
             // this.addLog('訊息已發送至 Flutter');
         },
         handleFloatingButtonClick() {
