@@ -38,12 +38,22 @@ const addLog = (log: string) => {
 };
 
 // 發送訊息到 Flutter 的方法
+// const sendMessageToFlutter = () => {
+//     const messageData = { name: 'userinfo', data: null };
+//     addLog(`即將發送訊息到 Flutter: ${JSON.stringify(messageData)}`);
+//     useConnectionMessage('userinfo', null);
+//     addLog('訊息已發送至 Flutter');
+// };
 const sendMessageToFlutter = () => {
-    const messageData = { name: 'userinfo', data: null };
+    const messageData = {
+        name: 'open_link',
+        data: 'https://taipei-microservices-initiative-hayu.onrender.com/api/autofillform/showpdf/travelform_%E9%98%BF%E5%9B%89%E5%93%88.pdf'
+    };
     addLog(`即將發送訊息到 Flutter: ${JSON.stringify(messageData)}`);
-    useConnectionMessage('userinfo', null);
+    useConnectionMessage('open_link', messageData.data); // 使用 'open_link' 發送資料
     addLog('訊息已發送至 Flutter');
 };
+
 
 // 處理來自 Flutter 的回應
 const handleFlutterMessage = (event: { data: string }) => {

@@ -10,6 +10,10 @@
         <!-- 活動列表頁籤 -->
         <div v-if="activeTab === 0" class="activities-list">
             <button @click="handleSwitchFollow" class="switch-btn">{{ showFollow ? '顯示未追蹤活動' : '顯示追蹤活動' }}</button>
+            <div>
+                <button @click="sendMessageToFlutter()">發送訊息到 Flutter</button>
+            </div>
+
             <ul v-if="!showFollow" class="unfollow-list">
                 <li v-for="activity in unfollowActivities " :key="activity.id" class="activity-item">
                     <h2 class="page-title">活動列表</h2>
@@ -49,6 +53,8 @@
                         </div>
                     </div>
                 </li>
+
+
             </ul>
             <ul v-if="showFollow" class="follow-list">
                 <h2 class="page-title">追蹤列表</h2>
@@ -160,8 +166,22 @@ import VoteOptions from '@/components/VoteOptions.vue';
 import axios from 'axios';
 import OpenAI from "openai";
 import { marked } from "marked";
+import { useConnectionMessage } from '@/composables/useConnectionMessage';
+
 let kkk = "c2stcHJvai1jS2M0c3NFNkpPQWFycFN4QnFQYmxfMmtOdXBxbXJId05abUppdVRtdm84ZjJrR2ZONW1fX2hFOWdJVDNCbGJrRkpRekpTd2hGRkJuUGFqNVlHazBwd1BNdmdvb0lKeXQyMVd3cmZMNUR6aDU5VXV4VmxLRmNjZmdwZGNB";
 const decodedStr = atob(kkk);
+// const flutterResponse = ref(''); // 儲存來自 Flutter 的回應
+
+// const sendMessageToFlutter = () => {
+//     const messageData = {
+//         name: 'open_link',
+//         data: 'https://taipei-microservices-initiative-hayu.onrender.com/api/autofillform/showpdf/travelform_%E9%98%BF%E5%9B%89%E5%93%88.pdf'
+//     };
+//     addLog(`即將發送訊息到 Flutter: ${JSON.stringify(messageData)}`);
+//     useConnectionMessage('open_link', messageData.data); // 使用 'open_link' 發送資料
+//     addLog('訊息已發送至 Flutter');
+// };
+
 
 export default {
     components: {
@@ -185,6 +205,15 @@ export default {
         };
     },
     methods: {
+        sendMessageToFlutter() {
+            const messageData = {
+                name: 'open_link',
+                data: 'https://taipei-microservices-initiative-hayu.onrender.com/api/autofillform/showpdf/travelform_%E9%98%BF%E5%9B%89%E5%93%88.pdf'
+            };
+            // this.addLog(`即將發送訊息到 Flutter: ${JSON.stringify(messageData)}`);
+            useConnectionMessage('open_link', messageData.data); // 發送資料到 Flutter
+            // this.addLog('訊息已發送至 Flutter');
+        },
         handleFloatingButtonClick() {
             if (this.activeTab === 0) {
                 this.$router.push('/home');
@@ -333,7 +362,7 @@ export default {
         this.fetchUnfollowActivities();
         this.fetchFollowActivities();
         this.fetchActivities2();
-    }
+    },
 };
 </script>
 
