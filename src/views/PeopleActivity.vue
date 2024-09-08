@@ -10,9 +10,9 @@
         <!-- 活動列表頁籤 -->
         <div v-if="activeTab === 0" class="activities-list">
             <button @click="handleSwitchFollow" class="switch-btn">{{ showFollow ? '顯示未追蹤活動' : '顯示追蹤活動' }}</button>
-            <div>
+            <!-- <div>
                 <button @click="sendMessageToFlutter()">發送訊息到 Flutter</button>
-            </div>
+            </div> -->
 
             <ul v-if="!showFollow" class="unfollow-list">
                 <h2 class="page-title">活動列表</h2>
