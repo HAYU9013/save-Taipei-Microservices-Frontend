@@ -381,11 +381,11 @@ export default {
     width: 100px;
     height: 40px;
     background-color: #00bcd4;
-    border-radius: 50%;
+    border-radius: 25%;
     color: white;
-    font-size: 2rem;
+    font-size: 1.3rem;
     text-align: center;
-    line-height: 60px;
+    line-height: 40px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     cursor: pointer;
     transition: transform 0.3s ease, background-color 0.3s ease;
