@@ -382,7 +382,7 @@ export default {
     width: 100px;
     height: 40px;
     background-color: #00bcd4;
-    border-radius: 25%;
+    border-radius: 37%;
     color: white;
     font-size: 1.3rem;
     text-align: center;
